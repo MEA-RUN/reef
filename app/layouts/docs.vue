@@ -47,20 +47,20 @@ body {
 </style>
 
 <template>
-  <div class="w-full h-full px-8 md:px-16 text-green9 font-semibold text-sm overflow-visible">
+  <div class="w-full h-full text-green9 font-semibold text-sm overflow-visible">
 
     <SplitterGroup id="splitter-group-1" direction="horizontal">
 
       <SplitterPanel
           id="splitter-group-1-panel-1"
-          :min-size="20"
+          :min-size="35"
           class="flex items-center justify-center"
       >
         <ScrollAreaRoot
             class="w-full h-[90dvh] relative overflow-hidden"
             style="--scrollbar-size: 10px"
         >
-          <ScrollAreaViewport class="w-full h-full rounded border border-error">
+          <ScrollAreaViewport class="w-full h-full rounded">
             <UPage>
               <template #left>
                 <UPageAside>
@@ -95,13 +95,71 @@ body {
       </SplitterPanel>
 
 
-      <SplitterResizeHandle id="splitter-group-1-resize-handle-1" class="w-2">
-        <Icon name="radix-icons-drag-handle-dots-2" />
+      <SplitterResizeHandle id="splitter-group-1-resize-handle-1" class="w-2 border" style="border-color: #27272a;">
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+<!--        <Icon name="radix-icons-drag-handle-dots-2" />-->
+
       </SplitterResizeHandle>
 
       <SplitterPanel
           id="splitter-group-1-panel-2"
-          class="border-l-2 flex items-center justify-center"
+          class=" flex items-center justify-center"
           collapsible
       >
         <img src="https://i.pinimg.com/736x/8a/a8/a2/8aa8a28423469f1e0debd6dcaa62cabe.jpg"/>
