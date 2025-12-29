@@ -40,8 +40,14 @@ import {SplitterGroup, SplitterPanel, SplitterResizeHandle, ScrollAreaRoot, Scro
 <!--  </div>-->
 <!--</template>-->
 
+<style>
+body {
+  overflow: hidden;
+}
+</style>
+
 <template>
-  <div class="w-full h-full px-8 md:px-16 text-green9 font-semibold text-sm">
+  <div class="w-full h-full px-8 md:px-16 text-green9 font-semibold text-sm overflow-visible">
 
     <SplitterGroup id="splitter-group-1" direction="horizontal">
 
@@ -51,7 +57,7 @@ import {SplitterGroup, SplitterPanel, SplitterResizeHandle, ScrollAreaRoot, Scro
           class="flex items-center justify-center"
       >
         <ScrollAreaRoot
-            class="w-full h-full relative overflow-hidden"
+            class="w-full h-[90dvh] relative overflow-hidden"
             style="--scrollbar-size: 10px"
         >
           <ScrollAreaViewport class="w-full h-full rounded border border-error">
