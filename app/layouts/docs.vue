@@ -40,7 +40,6 @@ html, body {
 
 <template>
   <UMain class="h-screen">
-
     <SplitterGroup id="splitter-group-1" direction="horizontal" class="h-full">
 
       <SplitterPanel
@@ -58,16 +57,13 @@ html, body {
               </template>
               <slot/>
             </UPage>
-
             <AppFooter/>
           </UContainer>
         </div>
-
       </SplitterPanel>
 
 
-      <SplitterResizeHandle id="splitter-group-1-resize-handle-1" class="w-2 border" style="border-color: #27272a;">
-      </SplitterResizeHandle>
+      <SplitterResizeHandle id="splitter-group-1-resize-handle-1" class="w-2 border" style="border-color: #27272a;" />
 
       <SplitterPanel
           id="splitter-group-1-panel-2"
@@ -78,7 +74,7 @@ html, body {
           <img src="https://i.pinimg.com/736x/8a/a8/a2/8aa8a28423469f1e0debd6dcaa62cabe.jpg" class="max-w-full h-auto" />
         </UContainer>
       </SplitterPanel>
+
     </SplitterGroup>
-<!--  </div>-->
   </UMain>
 </template>
