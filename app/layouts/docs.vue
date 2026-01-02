@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {SplitterGroup, SplitterPanel, SplitterResizeHandle } from "reka-ui";
+import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from "reka-ui";
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -59,6 +59,7 @@ html, body {
               <slot/>
             </UPage>
 
+            <AppFooter/>
           </UContainer>
         </div>
 
