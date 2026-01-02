@@ -1,5 +1,24 @@
 <script setup lang="ts">
 import {SplitterGroup, SplitterPanel, SplitterResizeHandle } from "reka-ui";
+import { watch } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+
+watch(() => route.hash, (newHash) => {
+  if (newHash) {
+    const target = document.getElementById(newHash.slice(1));
+    const scrollContainer = document.querySelector('.scroll-container');
+    if (target && scrollContainer) {
+      setTimeout(() => {
+        scrollContainer.scrollTo({
+          top: target.offsetTop - 80,
+          behavior: 'smooth'
+        });
+      }, 100);
+    }
+  }
+}, { immediate: true });
 </script>
 
 <style>
