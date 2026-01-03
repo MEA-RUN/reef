@@ -3,9 +3,14 @@ import {useDocusI18n, useSidePanel} from "../../../.nuxt/imports";
 
 const appConfig = useAppConfig()
 const site = useSiteConfig()
+const route = useRoute()
 
 const { localePath, isEnabled, locales } = useDocusI18n()
 const { isOpen, toggleSidePanel } = useSidePanel()
+
+const isDefaultLayout = computed(() => {
+  return route.meta.layout === 'default' || !route.meta.layout;
+});
 
 const links = computed(() => appConfig.github && appConfig.github.url
     ? [
@@ -53,6 +58,7 @@ const links = computed(() => appConfig.github && appConfig.github.url
 
       <ClientOnly>
         <UButton
+            v-if="!isDefaultLayout"
             :icon="isOpen ? 'lucide:panel-right-open' : 'lucide:panel-right-close'"
             :aria-label="'right-panel'"
             color="neutral"
@@ -62,7 +68,7 @@ const links = computed(() => appConfig.github && appConfig.github.url
         />
 
         <template #fallback>
-          <div class="h-8 w-8 animate-pulse bg-neutral-200 dark:bg-neutral-800 rounded-md" />
+          <div v-if="!isDefaultLayout" class="h-8 w-8 animate-pulse bg-neutral-200 dark:bg-neutral-800 rounded-md" />
         </template>
       </ClientOnly>
 
