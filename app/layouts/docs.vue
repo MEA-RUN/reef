@@ -2,6 +2,9 @@
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from "reka-ui";
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useSidePanel } from "../composables/useSidePanel";
+
+const { isOpen } = useSidePanel();
 
 const route = useRoute();
 
@@ -32,7 +35,7 @@ html, body {
 }
 
 .scroll-container {
-  height: 94dvh;
+  height: 93.5dvh;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -62,10 +65,10 @@ html, body {
         </div>
       </SplitterPanel>
 
-
-      <SplitterResizeHandle id="splitter-group-1-resize-handle-1" class="w-2 border" style="border-color: #27272a;" />
+      <SplitterResizeHandle v-show="isOpen" id="splitter-group-1-resize-handle-1" class="w-2 border" style="border-color: #27272a;" />
 
       <SplitterPanel
+          v-show="isOpen"
           id="splitter-group-1-panel-2"
           collapsible
           class="h-full overflow-y-auto"

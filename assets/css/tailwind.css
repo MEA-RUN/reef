@@ -1,0 +1,39 @@
+@import "@nuxt/ui";
+
+@theme {
+    --color-manta-primary-50: #f0fdfc;
+    --color-manta-primary-100: #ccfbf6;
+    --color-manta-primary-200: #99f6ed;
+    --color-manta-primary-300: #5eeadf;
+    --color-manta-primary-400: #2dd4c7;
+    --color-manta-primary-500: #1fc1b6;
+    --color-manta-primary-600: #149b93;
+    --color-manta-primary-700: #147b76;
+    --color-manta-primary-800: #15625f;
+    --color-manta-primary-900: #16514f;
+    --color-manta-primary-950: #063230;
+
+    --color-manta-secondary-50: #f0f4fe;
+    --color-manta-secondary-100: #dde6fc;
+    --color-manta-secondary-200: #c2d4fa;
+    --color-manta-secondary-300: #96b1e3;
+    --color-manta-secondary-400: #7a96d9;
+    --color-manta-secondary-500: #5a76c9;
+    --color-manta-secondary-600: #455bbe;
+    --color-manta-secondary-700: #3a4aae;
+    --color-manta-secondary-800: #34408d;
+    --color-manta-secondary-900: #2f3970;
+    --color-manta-secondary-950: #202545;
+
+    --color-manta-accent-50: #f8fafc;
+    --color-manta-accent-100: #f1f5f9;
+    --color-manta-accent-200: #e2e8f0;
+    --color-manta-accent-300: #cbd5e1;
+    --color-manta-accent-400: #94a3b8;
+    --color-manta-accent-500: #64748b;
+    --color-manta-accent-600: #475569;
+    --color-manta-accent-700: #334155;
+    --color-manta-accent-800: #1e293b;
+    --color-manta-accent-900: #0f172a;
+    --color-manta-accent-950: #0d2045;
+}
