@@ -67,9 +67,9 @@ const editLink = computed(() => {
   ].filter(Boolean).join('/')
 })
 </script>
-
 <template>
   <UPage v-if="page">
+
     <UPageHeader
         :title="page.title"
         :description="page.description"
@@ -91,6 +91,7 @@ const editLink = computed(() => {
     </UPageHeader>
 
     <UPageBody>
+
       <ContentRenderer
           v-if="page"
           :value="page"
@@ -135,6 +136,7 @@ const editLink = computed(() => {
           highlight
           :title="appConfig.toc?.title || t('docs.toc')"
           :links="page.body?.toc?.links"
+          class="border-b border-dashed border-default top-[calc(var(--ui-header-height)-64px)] lg:backdrop-blur-none! lg:overflow-y-auto"
       >
         <template #bottom>
           <DocsAsideRightBottom />

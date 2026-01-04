@@ -2,14 +2,14 @@ export default defineAppConfig({
     docus: {
         locale: 'en', // Default: 'en'
     },
-    // seo: {
-    //     // Default to `%s - ${site.name}`
-    //     titleTemplate: '',
-    //     // Default to package.json name
-    //     title: '',
-    //     // Default to package.json description
-    //     description: ''
-    // },
+    seo: {
+        // Default to `%s - ${site.name}`
+        titleTemplate: `MEA - %s`,
+        // Default to package.json name
+        title: '',
+        // Default to package.json description
+        description: ''
+    },
     // toc: {
     //     // Rename the title of the table of contents
     //     title: 'On this page',

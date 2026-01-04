@@ -7,6 +7,12 @@ import { useSidePanel } from "../composables/useSidePanel";
 const { isOpen } = useSidePanel();
 
 const route = useRoute();
+watch(() => route.path, () => {
+  const scrollContainer = document.querySelector('.scroll-container');
+  if (scrollContainer) {
+    scrollContainer.scrollTo({ top: 0  });
+  }
+}, { immediate: false });
 
 watch(() => route.hash, (newHash) => {
   if (newHash) {
@@ -53,9 +59,11 @@ html, body {
           <UContainer>
             <UPage>
               <template #left>
-                <UPageAside>
-                  <DocsAsideLeftTop/>
-                  <DocsAsideLeftBody/>
+                <UPageAside
+                    class="w-64 lg:w-72 lg:sticky lg:top-[calc(var(--ui-header-height)-64px)] lg:overflow-y-auto"
+                >
+                  <DocsAsideLeftTop />
+                  <DocsAsideLeftBody />
                 </UPageAside>
               </template>
               <slot/>
