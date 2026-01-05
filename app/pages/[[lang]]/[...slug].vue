@@ -16,10 +16,6 @@ import { createError, useAppConfig, useAsyncData } from "nuxt/app";
 
 const { isMobileLayout } = useMobileLayout();
 
-watch(isMobileLayout, (newValue, oldValue) => {
-  console.log('Page - isMobileLayout changed:', { old: oldValue, new: newValue });
-}, { immediate: true });
-
 definePageMeta({
   layout: 'docs',
 })
@@ -153,7 +149,6 @@ const pageUi = computed(() => ({
       <UContentSurround :surround="surround" />
     </UPageBody>
 
-<!--    sticky z-10 bg-default/75 lg:bg-[initial] backdrop-blur -mx-4 px-4 sm:px-6 sm:-mx-6 overflow-y-auto max-h-[calc(100vh-var(--ui-header-height))] lg:col-span-2 order-first lg:order-last border-b border-dashed border-default top-[calc(var(--ui-header-height)-64px)] lg:backdrop-blur-none! lg:overflow-y-auto -->
     <template
         v-if="page?.body?.toc?.links?.length"
         #right
