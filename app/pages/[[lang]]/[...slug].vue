@@ -1,8 +1,24 @@
+
 <script setup lang="ts">
 import { kebabCase } from 'scule'
-import type { ContentNavigationItem, Collections, DocsCollectionItem } from '@nuxt/content'
+import type { ContentNavigationItem, Collections } from '@nuxt/content'
 import { findPageHeadline } from '@nuxt/content/utils'
-import { addPrerenderPath } from "../../../.nuxt/imports";
+import {
+  addPrerenderPath,
+  definePageMeta,
+  inject,
+  useDocusI18n
+} from "../../../.nuxt/imports";
+import { computed, ref} from "vue";
+import { useMobileLayout } from "../../composables/useMobileLayout";
+import { useRoute } from "vue-router";
+import { createError, useAppConfig, useAsyncData } from "nuxt/app";
+
+const { isMobileLayout } = useMobileLayout();
+
+watch(isMobileLayout, (newValue, oldValue) => {
+  console.log('Page - isMobileLayout changed:', { old: oldValue, new: newValue });
+}, { immediate: true });
 
 definePageMeta({
   layout: 'docs',
@@ -66,17 +82,26 @@ const editLink = computed(() => {
     `${page.value?.stem}.${page.value?.extension}`,
   ].filter(Boolean).join('/')
 })
+const pageUi = computed(() => ({
+  center: isMobileLayout.value ? 'lg:col-span-8' : 'lg:col-span-6'
+}));
 </script>
 <template>
-  <UPage v-if="page">
+  <UPage v-if="page" class="lg:grid-cols-10" :ui="pageUi">
+
+    <template #left v-if="!isMobileLayout">
+      <UPageAside
+          class="w-64 lg:sticky lg:top-[calc(var(--ui-header-height)-64px)] lg:overflow-y-auto"
+      >
+        <DocsAsideLeftTop />
+        <DocsAsideLeftBody />
+      </UPageAside>
+    </template>
 
     <UPageHeader
         :title="page.title"
         :description="page.description"
         :headline="headline"
-        :ui="{
-        wrapper: 'flex-row items-center flex-wrap justify-between',
-      }"
     >
       <template #links>
         <UButton
@@ -128,6 +153,7 @@ const editLink = computed(() => {
       <UContentSurround :surround="surround" />
     </UPageBody>
 
+<!--    sticky z-10 bg-default/75 lg:bg-[initial] backdrop-blur -mx-4 px-4 sm:px-6 sm:-mx-6 overflow-y-auto max-h-[calc(100vh-var(--ui-header-height))] lg:col-span-2 order-first lg:order-last border-b border-dashed border-default top-[calc(var(--ui-header-height)-64px)] lg:backdrop-blur-none! lg:overflow-y-auto -->
     <template
         v-if="page?.body?.toc?.links?.length"
         #right
@@ -139,6 +165,9 @@ const editLink = computed(() => {
           class="border-b border-dashed border-default top-[calc(var(--ui-header-height)-64px)] lg:backdrop-blur-none! lg:overflow-y-auto"
       >
         <template #bottom>
+          <template v-if="isMobileLayout">
+            <DocsAsideLeftBody />
+          </template>
           <DocsAsideRightBottom />
         </template>
       </UContentToc>

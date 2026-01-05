@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from "reka-ui";
-import { watch } from 'vue';
+import { watch, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useSidePanel } from "../composables/useSidePanel";
+import { useMobileLayout } from "../composables/useMobileLayout";
 
 const { isOpen } = useSidePanel();
+const { isMobileLayout, checkWidth } = useMobileLayout();
 
 const route = useRoute();
-watch(() => route.path, () => {
+watch(() => route.path, async () => {
   const scrollContainer = document.querySelector('.scroll-container');
   if (scrollContainer) {
     scrollContainer.scrollTo({ top: 0  });
   }
+  setTimeout(checkWidth, 100);
 }, { immediate: false });
 
 watch(() => route.hash, (newHash) => {
@@ -28,6 +31,10 @@ watch(() => route.hash, (newHash) => {
     }
   }
 }, { immediate: true });
+
+watch(isMobileLayout, (newValue) => {
+  console.log('Layout changed to mobile:', newValue);
+});
 </script>
 
 <style>
@@ -57,23 +64,13 @@ html, body {
       >
         <div class="scroll-container">
           <UContainer>
-            <UPage>
-              <template #left>
-                <UPageAside
-                    class="w-64 lg:w-72 lg:sticky lg:top-[calc(var(--ui-header-height)-64px)] lg:overflow-y-auto"
-                >
-                  <DocsAsideLeftTop />
-                  <DocsAsideLeftBody />
-                </UPageAside>
-              </template>
-              <slot/>
-            </UPage>
+            <slot />
             <AppFooter/>
           </UContainer>
         </div>
       </SplitterPanel>
 
-      <SplitterResizeHandle v-show="isOpen" id="splitter-group-1-resize-handle-1" class="w-2 border" style="border-color: #27272a;" />
+      <SplitterResizeHandle v-show="isOpen" id="splitter-group-1-resize-handle-1" class="border border-default" />
 
       <SplitterPanel
           v-show="isOpen"
