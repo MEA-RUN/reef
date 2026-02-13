@@ -9,10 +9,12 @@ import {
   inject,
   useDocusI18n
 } from "../../../.nuxt/imports";
-import { computed, ref} from "vue";
+import { computed, ref, watch, onMounted, nextTick } from "vue";
 import { useMobileLayout } from "../../composables/useMobileLayout";
 import { useRoute } from "vue-router";
 import { createError, useAppConfig, useAsyncData } from "nuxt/app";
+import { useSubjectTools } from "../../composables/useSubjectTools";
+import { useSidePanel } from "../../composables/useSidePanel";
 
 const { isMobileLayout } = useMobileLayout();
 
@@ -57,6 +59,62 @@ const headline = ref(findPageHeadline(navigation?.value, page.value?.path))
 watch(() => navigation?.value, () => {
   headline.value = findPageHeadline(navigation?.value, page.value?.path) || headline.value
 })
+
+// Handle tool frontmatter
+const { setActiveTool, metadata, loadMetadata } = useSubjectTools()
+const { toggleSidePanel, isOpen } = useSidePanel()
+
+// Computed property to get tool from page
+const pageTool = computed(() => {
+  const tool =  page.value?.meta?.tool
+  if (tool) console.log('[Page] Tool found:', tool)
+  return tool
+})
+
+// Function to open tool from frontmatter
+const openToolFromFrontmatter = async (toolId: string) => {
+  // Only run on client
+  if (import.meta.server) return
+
+  if (isMobileLayout.value) return
+
+  // Ensure metadata is loaded
+  if (!metadata.value) {
+    await loadMetadata('/tools.json')
+  }
+
+  if (!metadata.value) {
+    console.warn('[Page] ❌ Metadata not available after loading')
+    return
+  }
+
+  const tool = metadata.value.tools.find(t => t.id === toolId)
+
+  if (tool) {
+    setActiveTool(toolId)
+    await nextTick()
+
+    setTimeout(() => {
+      if (!isOpen.value) {
+        toggleSidePanel(true)
+      }
+    }, 150)
+  } else {
+    console.warn('[Page] ❌ Tool specified in frontmatter not found:', toolId)
+  }
+}
+
+// Load metadata on mount (client-side only)
+onMounted(async () => {
+  if (!metadata.value) {
+    await loadMetadata('/tools.json')
+  }
+})
+
+// Watch for page tool changes
+watch(pageTool, async (newTool) => {
+  if (newTool) await openToolFromFrontmatter(newTool)
+}, { immediate: true })
 
 defineOgImageComponent('Docs', {
   headline: headline.value,
@@ -158,6 +216,9 @@ const pageUi = computed(() => ({
           :title="appConfig.toc?.title || t('docs.toc')"
           :links="page.body?.toc?.links"
           class="border-b border-dashed border-default top-[calc(var(--ui-header-height)-64px)] lg:backdrop-blur-none! lg:overflow-y-auto"
+          :ui="{
+            linkText: 'whitespace-normal break-words'
+          }"
       >
         <template #bottom>
           <template v-if="isMobileLayout">

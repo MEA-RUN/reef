@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {useDocusI18n, useSidePanel} from "../../../.nuxt/imports";
+import { useMobileLayout } from "../../composables/useMobileLayout";
 
 const appConfig = useAppConfig()
 const site = useSiteConfig()
@@ -7,6 +8,7 @@ const route = useRoute()
 
 const { localePath, isEnabled, locales } = useDocusI18n()
 const { isOpen, toggleSidePanel } = useSidePanel()
+const { isMobileLayout } = useMobileLayout()
 
 const isDefaultLayout = computed(() => {
   return route.meta.layout === 'default' || !route.meta.layout;
@@ -58,7 +60,7 @@ const links = computed(() => appConfig.github && appConfig.github.url
 
       <ClientOnly>
         <UButton
-            v-if="!isDefaultLayout"
+            v-if="!isDefaultLayout && !isMobileLayout"
             :icon="isOpen ? 'lucide:panel-right-open' : 'lucide:panel-right-close'"
             :aria-label="'right-panel'"
             color="neutral"

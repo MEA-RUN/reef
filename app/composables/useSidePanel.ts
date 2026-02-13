@@ -16,6 +16,13 @@ export const useSidePanel = () => {
         return !!config.sidePanel;
     });
 
+    const isFullscreen = useState('sidePanelFullscreen', () => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('sidePanelFullscreen') === 'true';
+        }
+        return false;
+    });
+
     const lastTool = useState<ToolState | null>('sidePanelLastTool', () => {
         if (typeof window !== 'undefined' && localStorage.getItem('sidePanelLastTool')) {
             return JSON.parse(localStorage.getItem('sidePanelLastTool')!);
@@ -27,6 +34,13 @@ export const useSidePanel = () => {
         isOpen.value = open !== undefined ? open : !isOpen.value;
         if (typeof window !== 'undefined') {
             localStorage.setItem('sidePanelOpen', String(isOpen.value));
+        }
+    };
+
+    const toggleFullscreen = (fullscreen?: boolean) => {
+        isFullscreen.value = fullscreen !== undefined ? fullscreen : !isFullscreen.value;
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('sidePanelFullscreen', String(isFullscreen.value));
         }
     };
 
@@ -56,8 +70,10 @@ export const useSidePanel = () => {
 
     return {
         isOpen,
+        isFullscreen,
         lastTool,
         toggleSidePanel,
+        toggleFullscreen,
         setLastTool,
         openWithLastTool,
         clearLastTool

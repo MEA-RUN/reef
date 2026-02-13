@@ -81,5 +81,23 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     '@nuxt/ui',
     '@nuxtjs/mdc'
-  ]
+  ],
+
+  mdc: {
+    highlight: {
+      theme: {
+        default: 'material-theme-lighter',
+        dark: 'material-theme-palenight'
+      },
+      langs: ['bash', 'shell', 'typescript', 'javascript', 'vue', 'json', 'yaml', 'markdown', 'mermaid']
+    }
+  },
+
+  components: true,
+
+  vite: {
+    optimizeDeps: {
+      include: ['mermaid']
+    }
+  }
 })

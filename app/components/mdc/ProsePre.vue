@@ -23,12 +23,13 @@ const theme = {
 import { useClipboard } from "@vueuse/core";
 import { useLocale } from "@nuxt/ui/composables/useLocale";
 import { useAppConfig } from "nuxt/app";
-import { computed } from "vue";
+import { computed, ref, watch, nextTick } from "vue";
 import { tv } from "@nuxt/ui/utils/tv";
 
 import Pre from "@nuxt/ui/components/prose/Pre.vue";
 import UButton from "@nuxt/ui/components/Button.vue";
 import UCodeIcon from "@nuxt/ui/components/prose/CodeIcon.vue";
+import MermaidChart from "../MermaidChart.vue";
 
 const props = defineProps({
   icon: { type: null, required: false },
@@ -43,7 +44,54 @@ const props = defineProps({
   ui: { type: null, required: false }
 });
 
-defineSlots();
+const slotRef = ref<HTMLElement | null>(null);
+const extractedCode = ref<string>('');
+const renderKey = ref(0);
+
+const isMermaid = computed(() => {
+  return props.language === 'mermaid'
+})
+
+// Extract code from slot - reactive to DOM updates
+const mermaidCode = computed(() => {
+  if (props.code) return props.code
+  return extractedCode.value
+})
+
+// Extract code from slot after mounting
+const extractCodeFromSlot = () => {
+  if (slotRef.value) {
+    const textContent = slotRef.value.textContent || slotRef.value.innerText || ''
+    const trimmed = textContent.trim()
+    if (trimmed && trimmed !== extractedCode.value) {
+      extractedCode.value = trimmed
+    }
+  }
+}
+
+// Watch slot ref and extract immediately when available
+watch(slotRef, async (newVal) => {
+  if (newVal && isMermaid.value) {
+    await nextTick()
+    extractCodeFromSlot()
+  }
+}, { immediate: true })
+
+// Watch for language/code changes
+watch([() => props.language, () => props.code], async ([lang, code]) => {
+  if (lang === 'mermaid') {
+    renderKey.value++ // Force re-render
+    if (code) {
+      extractedCode.value = code
+    } else {
+      await nextTick()
+      await nextTick()
+      extractCodeFromSlot()
+    }
+  } else {
+    extractedCode.value = ''
+  }
+}, { immediate: true })
 
 const showLinesEnabled = computed(() => {
   return props.showLines || props.meta?.includes('show-lines') || false
@@ -83,7 +131,31 @@ const ui = computed(() => tv({
 </style>
 
 <template>
-  <div :class="ui.root({ class: [props.ui?.root, { 'show-lines': showLinesEnabled }], filename: !!filename })">
+  <!-- Render mermaid chart if language is mermaid -->
+  <div v-if="isMermaid" class="my-5">
+    <div v-if="filename && !hideHeader" :class="ui.header({ class: props.ui?.header })">
+      <UCodeIcon :icon="icon" :filename="filename" :class="ui.icon({ class: props.ui?.icon })" />
+      <span :class="ui.filename({ class: props.ui?.filename })">{{ filename }}</span>
+    </div>
+
+    <!-- Hidden slot ref for code extraction -->
+    <div ref="slotRef" style="display: none;">
+      <slot />
+    </div>
+
+    <!-- Show mermaid diagram -->
+    <ClientOnly>
+      <MermaidChart v-if="mermaidCode" :key="`mermaid-${renderKey}`" :code="mermaidCode" />
+      <template #fallback>
+        <div class="mermaid-loading border border-muted bg-default rounded-md p-4">
+          <p class="text-sm text-muted">Loading diagram...</p>
+        </div>
+      </template>
+    </ClientOnly>
+  </div>
+
+  <!-- Otherwise render as normal code block -->
+  <div v-else :class="ui.root({ class: [props.ui?.root, { 'show-lines': showLinesEnabled }], filename: !!filename })">
     <div v-if="filename && !hideHeader" :class="ui.header({ class: props.ui?.header })">
       <UCodeIcon :icon="icon" :filename="filename" :class="ui.icon({ class: props.ui?.icon })" />
 
