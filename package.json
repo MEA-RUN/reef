@@ -1,5 +1,26 @@
 {
   "name": "reef",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./nuxt.config.ts",
+      "import": "./nuxt.config.ts"
+    }
+  },
+  "main": "./nuxt.config.ts",
+  "files": [
+    "app",
+    "assets",
+    "components",
+    "composables",
+    "layouts",
+    "pages",
+    "plugins",
+    "public",
+    "content",
+    "nuxt.config.ts"
+  ],
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",

@@ -1,3 +1,18 @@
 - Ajouter Logo dans header
 - Modifier footer, ajouter les liens d'Epitech, Epitech Academy
 - Changer les couleurs du thème
+
+- Setup action for Github Pages
+Template
+    |
+    v
+Repo conteneur
+  - metadata
+  - subject/*.md
+  - assets/images, logo, etc
+  - README.md (ignored in GH Pages)
+Repo Tools x
+
+- Add a warning when you close a tool to prevent accidental closure, the content of the tool will be lost
+- Transformer reef en layer
+- Faire template de subject
