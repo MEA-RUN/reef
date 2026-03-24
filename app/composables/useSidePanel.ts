@@ -1,4 +1,5 @@
 import {useRuntimeConfig} from "nuxt/app";
+import { watch } from 'vue';
 
 interface ToolState {
     name: string;
@@ -66,7 +67,59 @@ export const useSidePanel = () => {
         if (typeof window !== 'undefined') {
             localStorage.removeItem('sidePanelLastTool');
         }
-    };
+    }
+
+    /**
+     * Utility to check if the side panel is larger than a certain percentage of the viewport width.
+     * @param percentage
+     * @returns Return true if the side panel is larger than the specified percentage of the viewport width, false otherwise.
+     */
+    const isLargerThan = (percentage: number = 50) => {
+        if (typeof window !== 'undefined') {
+            const windowWidth = window.innerWidth;
+            const panelWidth = window.innerWidth * (percentage / 100);
+
+        }
+        return false;
+    }
+
+    const watchScrollToTop = (route: any, checkWidth: any) => {
+        watch(() => route.path, async () => {
+            if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+                const scrollContainer = document.querySelector('.scroll-container');
+                if (scrollContainer) {
+                    scrollContainer.scrollTo({ top: 0  });
+                }
+                setTimeout(checkWidth, 100);
+            }
+        }, { immediate: true });
+    }
+
+    const watchScrollToTarget = (route: any) => {
+        watch(() => route.hash, (newHash) => {
+            if (newHash && typeof window !== 'undefined' && typeof document !== 'undefined') {
+                const target = document.getElementById(newHash.slice(1));
+                const scrollContainer = document.querySelector('.scroll-container');
+                if (target && scrollContainer) {
+                    setTimeout(() => {
+                        scrollContainer.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        }, { immediate: true });
+    }
+
+    // Exit fullscreen when closing the side panel
+    const watchIsOpen = () => {
+        watch(isOpen, (newValue) => {
+            if (!newValue && isFullscreen.value) {
+                toggleFullscreen(false);
+            }
+        });
+    }
 
     return {
         isOpen,
@@ -76,7 +129,10 @@ export const useSidePanel = () => {
         toggleFullscreen,
         setLastTool,
         openWithLastTool,
-        clearLastTool
+        clearLastTool,
+        watchScrollToTarget,
+        watchScrollToTop,
+        watchIsOpen
     };
 
 

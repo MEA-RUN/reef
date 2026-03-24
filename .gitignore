@@ -32,6 +32,13 @@ logs
 .profile
 *.0x
 
-#VSC
+# VSC
 .history
 .wrangler
+
+# Generated files
+content/
+!content/.gitkeep
+public/match
+public/tools.json
+tmp

@@ -1,4 +1,8 @@
 import { useState } from "nuxt/app";
+import { watch } from 'vue';
+
+const LEFT_PANEL_MIN_WIDTH = 920;
+let resizeObserver: ResizeObserver | null = null;
 
 export const useMobileLayout = () => {
     const isMobileLayout = useState('isMobileLayout', () => {
@@ -8,23 +12,40 @@ export const useMobileLayout = () => {
         }
         return false;
     });
+    const leftSideIsTooSmall = useState('leftSideIsTooSmall', () => false);
     const observerInitialized = useState('observerInitialized', () => false);
     let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
+    const checkLeftPanelWidth = () => {
+        if (!import.meta.client) {
+            leftSideIsTooSmall.value = false;
+            return;
+        }
+
+        const panel = document.getElementById('splitter-group-1-panel-1');
+        if (!panel) {
+            leftSideIsTooSmall.value = false;
+            return;
+        }
+
+        const panelWidth = panel.getBoundingClientRect().width;
+        leftSideIsTooSmall.value = panelWidth < LEFT_PANEL_MIN_WIDTH;
+    };
+
     const checkWidth = () => {
-        // Debounce to prevent rapid state changes
         if (debounceTimer) {
             clearTimeout(debounceTimer);
         }
 
         debounceTimer = setTimeout(() => {
-            // Check window width, not panel width
             const newValue = window.innerWidth < 1024;
-            // Only update if value actually changed
+
             if (isMobileLayout.value !== newValue) {
                 isMobileLayout.value = newValue;
             }
-        }, 150); // 150ms debounce
+
+            checkLeftPanelWidth();
+        }, 150);
     };
 
     const initObserver = () => {
@@ -34,6 +55,18 @@ export const useMobileLayout = () => {
 
         checkWidth();
         window.addEventListener('resize', checkWidth);
+
+        if (import.meta.client) {
+            const panel = document.getElementById('splitter-group-1-panel-1');
+            if (panel) {
+                resizeObserver = new ResizeObserver(() => {
+                    checkLeftPanelWidth();
+                });
+                resizeObserver.observe(panel);
+                checkLeftPanelWidth();
+            }
+        }
+
         observerInitialized.value = true;
     };
 
@@ -42,14 +75,30 @@ export const useMobileLayout = () => {
             clearTimeout(debounceTimer);
             debounceTimer = null;
         }
+        if (resizeObserver) {
+            resizeObserver.disconnect();
+            resizeObserver = null;
+        }
         window.removeEventListener('resize', checkWidth);
         observerInitialized.value = false;
     };
 
+    // Close active tool and side panel when switching to mobile
+    const watchIsMobileLayout = (isOpen: any, toggleSidePanel: any) => {
+        watch(isMobileLayout, (newValue) => {
+            console.log('Layout changed to mobile:', newValue);
+            if (newValue && isOpen.value) {
+                toggleSidePanel(false);
+            }
+        });
+    }
+
     return {
         isMobileLayout,
+        leftSideIsTooSmall,
         checkWidth,
         initObserver,
-        cleanupObserver
+        cleanupObserver,
+        watchIsMobileLayout
     };
 };

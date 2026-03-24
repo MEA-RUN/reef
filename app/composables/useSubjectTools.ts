@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 
 export interface Tool {
   id: string
@@ -99,6 +99,15 @@ export const useSubjectTools = () => {
     return metadata.value?.description
   }
 
+  // Exit fullscreen when closing the active tool
+  const watchActiveTool = (isFullscreen: any, toggleFullscreen: any) => {
+    watch(activeTool, (newValue) => {
+      if (!newValue && isFullscreen.value) {
+        toggleFullscreen(false);
+      }
+    });
+  }
+
   return {
     metadata,
     activeTool,
@@ -109,6 +118,7 @@ export const useSubjectTools = () => {
     clearActiveTool,
     getToolUrl,
     getSubjectTitle,
-    getSubjectDescription
+    getSubjectDescription,
+    watchActiveTool
   }
 }

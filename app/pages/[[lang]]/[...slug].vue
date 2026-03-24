@@ -16,7 +16,7 @@ import { createError, useAppConfig, useAsyncData } from "nuxt/app";
 import { useSubjectTools } from "../../composables/useSubjectTools";
 import { useSidePanel } from "../../composables/useSidePanel";
 
-const { isMobileLayout } = useMobileLayout();
+const { isMobileLayout, leftSideIsTooSmall } = useMobileLayout();
 
 definePageMeta({
   layout: 'docs',
@@ -26,8 +26,13 @@ const route = useRoute()
 const { locale, isEnabled, t } = useDocusI18n()
 const appConfig = useAppConfig()
 const navigation = inject<Ref<ContentNavigationItem[]>>('navigation')
+const { shouldPushContent: shouldHideToc } = useAssistant()
 
 const collectionName = computed(() => isEnabled.value ? `docs_${locale.value}` : 'docs')
+
+const shouldShowReducePage = computed(() => {
+  return !isMobileLayout.value && isOpen.value
+})
 
 const [{ data: page }, { data: surround }] = await Promise.all([
   useAsyncData(kebabCase(route.path), () => queryCollection(collectionName.value as keyof Collections).path(route.path).first() as Promise<DocsCollectionItem>),
@@ -47,12 +52,15 @@ addPrerenderPath(`/raw${route.path}.md`)
 
 const title = page.value.seo?.title || page.value.title
 const description = page.value.seo?.description || page.value.description
+const breadcrumbs = computed(() => findPageBreadcrumbs(navigation?.value, page.value?.path || ''))
 
 useSeoMeta({
   title,
   ogTitle: title,
   description,
-  ogDescription: description,
+  type: 'article',
+  modifiedAt: (page.value as unknown as Record<string, unknown>).modifiedAt as string | undefined,
+  breadcrumbs
 })
 
 const headline = ref(findPageHeadline(navigation?.value, page.value?.path))
@@ -73,27 +81,18 @@ const pageTool = computed(() => {
 
 // Function to open tool from frontmatter
 const openToolFromFrontmatter = async (toolId: string) => {
-  // Only run on client
   if (import.meta.server) return
-
   if (isMobileLayout.value) return
-
-  // Ensure metadata is loaded
-  if (!metadata.value) {
-    await loadMetadata('/tools.json')
-  }
-
+  if (!metadata.value) await loadMetadata('/tools.json')
   if (!metadata.value) {
     console.warn('[Page] ❌ Metadata not available after loading')
     return
   }
 
   const tool = metadata.value.tools.find(t => t.id === toolId)
-
   if (tool) {
     setActiveTool(toolId)
     await nextTick()
-
     setTimeout(() => {
       if (!isOpen.value) {
         toggleSidePanel(true)
@@ -123,10 +122,7 @@ defineOgImageComponent('Docs', {
 const github = computed(() => appConfig.github ? appConfig.github : null)
 
 const editLink = computed(() => {
-  if (!github.value) {
-    return
-  }
-
+  if (!github.value) return
   return [
     github.value.url,
     'edit',
@@ -141,28 +137,44 @@ const pageUi = computed(() => ({
 }));
 </script>
 <template>
-  <UPage v-if="page" class="lg:grid-cols-10" :ui="pageUi">
-
-    <template #left v-if="!isMobileLayout">
-      <UPageAside
-          class="w-64 lg:sticky lg:top-[calc(var(--ui-header-height)-64px)] lg:overflow-y-auto"
+  <UPage
+    v-if="page"
+    class="lg:grid-cols-10 lg:min-w-[920px]"
+    :ui="pageUi"
+    :key="`page-${shouldHideToc}`"
+  >
+    <template #left>
+      <template v-if="!leftSideIsTooSmall">
+        <UPageAside
+          class="lg:w-80 lg:min-w-80 lg:shrink-0 lg:sticky lg:top-[calc(var(--ui-header-height)-65px)] lg:overflow-y-auto"
       >
         <DocsAsideLeftTop />
-        <DocsAsideLeftBody />
+        <DocsAsideLeftBody
+          class="pl-2"
+          style="margin-top: -7px;"
+          :ui="{
+            link: 'after:absolute after:-left-1.5 after:inset-y-0.5 after:block after:w-px after:rounded-full after:transition-colors',
+            linkTitle: 'overflow-visible',
+          }"
+        />
       </UPageAside>
+      </template>
     </template>
 
     <UPageHeader
-        :title="page.title"
-        :description="page.description"
-        :headline="headline"
+      :title="page.title"
+      :description="page.description"
+      :headline="headline"
+      :ui="{
+        wrapper: 'flex-row items-center flex-wrap justify-between',
+      }"
     >
       <template #links>
         <UButton
-            v-for="(link, index) in (page as DocsCollectionItem).links"
-            :key="index"
-            size="sm"
-            v-bind="link"
+          v-for="(link, index) in (page as DocsCollectionItem).links"
+          :key="index"
+          size="sm"
+          v-bind="link"
         />
 
         <DocsPageHeaderLinks />
@@ -207,7 +219,7 @@ const pageUi = computed(() => ({
       <UContentSurround :surround="surround" />
     </UPageBody>
 
-    <template
+    <!-- <template
         v-if="page?.body?.toc?.links?.length"
         #right
     >
@@ -215,8 +227,9 @@ const pageUi = computed(() => ({
           highlight
           :title="appConfig.toc?.title || t('docs.toc')"
           :links="page.body?.toc?.links"
-          class="border-b border-dashed border-default top-[calc(var(--ui-header-height)-64px)] lg:backdrop-blur-none! lg:overflow-y-auto"
+          class="border-b border-dashed border-default lg:sticky lg:mt-2.5 top-[calc(var(--ui-header-height)-64px)] lg:backdrop-blur-none! lg:overflow-y-auto"
           :ui="{
+            container: 'py-3 mt-1',
             linkText: 'whitespace-normal break-words'
           }"
       >
@@ -227,6 +240,17 @@ const pageUi = computed(() => ({
           <DocsAsideRightBottom />
         </template>
       </UContentToc>
+    </template> -->
+
+    <template #right>
+      <DocsAsideRight
+        :page="page"
+        :show-left-fallback="leftSideIsTooSmall"
+        :ui="{
+          root: 'top-2!',
+          linkText: 'whitespace-normal break-words'
+        }"
+      />
     </template>
   </UPage>
 </template>

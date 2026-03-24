@@ -2,6 +2,7 @@ export default defineAppConfig({
     docus: {
         locale: 'en', // Default: 'en'
     },
+
     seo: {
         // Default to `%s - ${site.name}`
         titleTemplate: `MEA - %s`,
@@ -10,6 +11,7 @@ export default defineAppConfig({
         // Default to package.json description
         description: ''
     },
+
     // toc: {
     //     // Rename the title of the table of contents
     //     title: 'On this page',
@@ -24,33 +26,29 @@ export default defineAppConfig({
     //         }]
     //     }
     // },
+
     header: {
         // Title to display if no logo
         title: 'Manta Academy',
         // Logo configuration
-        // logo: {
-        //     alt: 'manta-academy-logo',
-        //     // Light mode
-        //     light: '',
-        //     // Dark mode
-        //     dark: ''
-        // },
+        logo: {
+            alt: 'manta-academy-logo',
+            // Light mode
+            light: '/logo.png',
+            // Dark mode
+            dark: '/logo.png',
+        }
     },
-    // socials: {
-    //     x: 'https://x.com/nuxt_js',
-    //     discord: 'https://discord.com/invite/ps2h6QT',
-    //     nuxt: 'https://nuxt.com',
-    // },
+
     github: {
-        url: 'https://github.com/nuxt-content/docus',
-        branch: 'main',
-        rootDir: 'docs'
+        url: 'https://github.com/MEA-RUN/${SUBJECT_NAME}',
+        branch: 'main'
     },
+
     ui: {
         colors: {
             primary: 'teal', // manta-primary
             secondary: 'red', // manta-secondary
-            accent: 'manta-accent'
         }
     }
 })

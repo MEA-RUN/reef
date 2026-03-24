@@ -6,55 +6,18 @@ import { useSidePanel } from "../composables/useSidePanel";
 import { useMobileLayout } from "../composables/useMobileLayout";
 import { useSubjectTools } from "../composables/useSubjectTools";
 
-const { isOpen, isFullscreen, toggleSidePanel, toggleFullscreen } = useSidePanel();
-const { isMobileLayout, checkWidth } = useMobileLayout();
-const { activeTool, getToolUrl, clearActiveTool } = useSubjectTools();
+const { isOpen, isFullscreen, toggleSidePanel, toggleFullscreen, watchScrollToTop, watchScrollToTarget, watchIsOpen } = useSidePanel();
+const { isMobileLayout, checkWidth, watchIsMobileLayout } = useMobileLayout();
+const { activeTool, getToolUrl, clearActiveTool, watchActiveTool } = useSubjectTools();
 
 const route = useRoute();
-watch(() => route.path, async () => {
-  const scrollContainer = document.querySelector('.scroll-container');
-  if (scrollContainer) {
-    scrollContainer.scrollTo({ top: 0  });
-  }
-  setTimeout(checkWidth, 100);
-}, { immediate: false });
 
-watch(() => route.hash, (newHash) => {
-  if (newHash) {
-    const target = document.getElementById(newHash.slice(1));
-    const scrollContainer = document.querySelector('.scroll-container');
-    if (target && scrollContainer) {
-      setTimeout(() => {
-        scrollContainer.scrollTo({
-          top: target.offsetTop - 80,
-          behavior: 'smooth'
-        });
-      }, 100);
-    }
-  }
-}, { immediate: true });
+watchScrollToTop(route, checkWidth);
+watchScrollToTarget(route);
+watchIsMobileLayout(isOpen, toggleSidePanel);
+watchActiveTool(isFullscreen, toggleFullscreen);
+watchIsOpen();
 
-watch(isMobileLayout, (newValue) => {
-  console.log('Layout changed to mobile:', newValue);
-  // Close active tool and side panel when switching to mobile
-  if (newValue && isOpen.value) {
-    toggleSidePanel(false);
-  }
-});
-
-// Exit fullscreen when closing the active tool
-watch(activeTool, (newValue) => {
-  if (!newValue && isFullscreen.value) {
-    toggleFullscreen(false);
-  }
-});
-
-// Exit fullscreen when closing the side panel
-watch(isOpen, (newValue) => {
-  if (!newValue && isFullscreen.value) {
-    toggleFullscreen(false);
-  }
-});
 </script>
 
 <style>
@@ -70,7 +33,7 @@ html, body {
 .scroll-container {
   height: 93.5dvh;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 </style>
 

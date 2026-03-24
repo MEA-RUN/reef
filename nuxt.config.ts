@@ -3,18 +3,22 @@ export default defineNuxtConfig({
     'docus'
   ],
 
-  devtools: {
-    enabled: true,
+  // devtools: {
+  //   enabled: true,
 
-    timeline: {
-      enabled: true
-    }
+  //   timeline: {
+  //     enabled: true
+  //   }
+  // },
+
+  i18n: {
+    locales: ['en', 'fr'],
+    defaultLocale: 'fr'
   },
 
   ui: {
     theme: {
       colors: [
-        'manta-primary', 'manta-secondary', 'manta-accent',
         'primary',
         'secondary',
         'accent',
@@ -31,7 +35,8 @@ export default defineNuxtConfig({
   modules: [
     "@nuxt/icon",
     '@nuxt/ui',
-    '@nuxtjs/mdc'
+    '@nuxtjs/mdc',
+    '@nuxtjs/i18n'
   ],
 
   mdc: {

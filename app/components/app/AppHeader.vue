@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {useDocusI18n, useSidePanel} from "../../../.nuxt/imports";
+import { useDocusI18n } from "../../../.nuxt/imports";
 import { useMobileLayout } from "../../composables/useMobileLayout";
+import { useSidePanel } from "../../composables/useSidePanel";
 
 const appConfig = useAppConfig()
 const site = useSiteConfig()
@@ -9,6 +10,7 @@ const route = useRoute()
 const { localePath, isEnabled, locales } = useDocusI18n()
 const { isOpen, toggleSidePanel } = useSidePanel()
 const { isMobileLayout } = useMobileLayout()
+const { isEnabled: isAssistantEnabled } = useAssistant()
 
 const isDefaultLayout = computed(() => {
   return route.meta.layout === 'default' || !route.meta.layout;
@@ -40,6 +42,10 @@ const links = computed(() => appConfig.github && appConfig.github.url
 
     <template #right>
       <AppHeaderCTA />
+
+      <template v-if="isAssistantEnabled">
+        <AssistantChat />
+      </template>
 
       <template v-if="isEnabled && locales.length > 1">
         <ClientOnly>
@@ -102,5 +108,12 @@ const links = computed(() => appConfig.github && appConfig.github.url
     <template #body>
       <AppHeaderBody />
     </template>
+
+    <!-- <template
+      v-if="subNavigationMode === 'header'"
+      #bottom
+    >
+      <AppHeaderBottom />
+    </template> -->
   </UHeader>
 </template>
