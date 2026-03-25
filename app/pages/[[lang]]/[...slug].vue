@@ -8,7 +8,7 @@ import {
   definePageMeta,
   inject,
   useDocusI18n
-} from "../../../.nuxt/imports";
+} from "#imports";
 import { computed, ref, watch, onMounted, nextTick } from "vue";
 import { useMobileLayout } from "../../composables/useMobileLayout";
 import { useRoute } from "vue-router";

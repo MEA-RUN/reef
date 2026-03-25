@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useAppConfig } from 'nuxt/app'
-import { useAssistant, useDocusI18n } from '../../../.nuxt/imports'
+import { useAssistant, useDocusI18n } from '#imports'
 
 const props = withDefaults(defineProps<{
   page?: any
