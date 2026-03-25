@@ -37,8 +37,9 @@ logs
 .wrangler
 
 # Generated files
-content/
-!content/.gitkeep
+content/**/*.md
+content/**/*.yml
+!**/**/index.md
 public/match
 public/tools.json
 tmp
