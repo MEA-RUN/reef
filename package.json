@@ -10,16 +10,10 @@
   },
   "main": "./nuxt.config.ts",
   "files": [
-    "app",
-    "assets",
-    "components",
-    "composables",
-    "layouts",
-    "pages",
-    "plugins",
+    "content/**/index.md",
     "public",
-    "content",
-    "nuxt.config.ts"
+    "nuxt.config.ts",
+    "scripts"
   ],
   "scripts": {
     "dev": "nuxt dev",
