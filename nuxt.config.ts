@@ -1,3 +1,6 @@
+import { defineNuxtConfig } from "nuxt/config";
+
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   extends: [
     'docus'
@@ -12,7 +15,10 @@ export default defineNuxtConfig({
   // },
 
   i18n: {
-    locales: ['en', 'fr'],
+    locales: [
+      { code: 'fr', name: 'Français' },
+      { code: 'en', name: 'English' },
+    ],
     defaultLocale: 'fr'
   },
 
@@ -32,12 +38,7 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2026-03-12",
 
-  modules: [
-    "@nuxt/icon",
-    '@nuxt/ui',
-    '@nuxtjs/mdc',
-    '@nuxtjs/i18n'
-  ],
+  modules: ["@nuxt/icon", '@nuxt/ui', '@nuxtjs/mdc', '@nuxtjs/i18n', '@nuxt/fonts'],
 
   mdc: {
     highlight: {
@@ -53,7 +54,11 @@ export default defineNuxtConfig({
 
   vite: {
     optimizeDeps: {
-      include: ['mermaid']
+      include: [
+        'mermaid',
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+      ]
     }
   }
 })

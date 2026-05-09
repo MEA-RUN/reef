@@ -1,6 +1,6 @@
 export default defineAppConfig({
     docus: {
-        locale: 'en', // Default: 'en'
+        locale: 'fr', // Default: 'en'
     },
 
     seo: {
