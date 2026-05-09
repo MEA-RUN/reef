@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="p-6 border-b border-default">
       <h2 class="text-2xl font-bold mb-2">Available Tools</h2>
-      <p v-if="metadata?.title" class="text-sm font-medium text-primary mb-1">{{ metadata.title }}</p>
+      <p v-if="manifest?.title" class="text-sm font-medium text-primary mb-1">{{ manifest.title }}</p>
       <p class="text-sm text-muted">Click a tool to open it in the viewer</p>
     </div>
 
@@ -23,7 +23,7 @@
         <p class="text-sm text-muted">{{ error }}</p>
         <UButton
             class="mt-4"
-            @click="loadMetadata('/tools.json')"
+            @click="loadManifest('/tools/manifests.json')"
         >
           Retry
         </UButton>
@@ -31,10 +31,10 @@
     </div>
 
     <!-- Tools list -->
-    <div v-else-if="metadata?.tools" class="flex-1 overflow-y-auto p-6">
+    <div v-else-if="manifest?.tools" class="flex-1 overflow-y-auto p-6">
       <div class="grid gap-4">
         <UButton
-            v-for="tool in metadata.tools"
+            v-for="tool in manifest.tools"
             :key="tool.id"
             variant="outline"
             size="xl"
@@ -87,11 +87,11 @@ import { onMounted } from 'vue'
 import { useSubjectTools } from '../composables/useSubjectTools'
 
 const {
-  metadata,
+  manifest,
   activeTool,
   loading,
   error,
-  loadMetadata,
+  loadManifest,
   setActiveTool,
   clearActiveTool
 } = useSubjectTools()
@@ -99,8 +99,8 @@ const {
 // Load metadata on mount
 onMounted(async () => {
   // Only load if not already loaded (shared state with page)
-  if (!metadata.value) {
-    await loadMetadata('/tools.json')
+  if (!manifest.value) {
+    await loadManifest('/tools/manifests.json')
   }
 })
 
@@ -111,7 +111,7 @@ const handleToolClick = (toolId: string) => {
 
 // Expose for parent components
 defineExpose({
-  metadata,
+  manifest,
   activeTool,
   setActiveTool,
   clearActiveTool

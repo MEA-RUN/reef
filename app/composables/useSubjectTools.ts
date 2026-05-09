@@ -12,7 +12,7 @@ export interface Tool {
   localPath?: string  // Local path in public/ directory
 }
 
-export interface SubjectMetadata {
+export interface SubjectManifest {
   title: string
   description?: string
   tools: Tool[]
@@ -22,20 +22,20 @@ export interface SubjectMetadata {
   }
 }
 
-const metadata = ref<SubjectMetadata | null>(null)
+const manifest = ref<SubjectManifest | null>(null)
 const activeTool = ref<Tool | null>(null)  // Currently displayed tool in iframe
 const loading = ref(false)
 const error = ref<string | null>(null)
 
 export const useSubjectTools = () => {
   /**
-   * Load metadata from a subject repository
-   * @param repoUrl - GitHub repository URL or path to metadata.json
+   * Load manifest from a subject repository
+   * @param repoUrl - GitHub repository URL or path to manifest.json
    */
-  const loadMetadata = async (repoUrl: string) => {
+  const loadManifest = async (repoUrl: string) => {
     // Only load on client side
     if (import.meta.server) {
-      console.log('[useSubjectTools] Skipping metadata load on server')
+      console.log('[useSubjectTools] Skipping manifest load on server')
       return
     }
 
@@ -45,10 +45,10 @@ export const useSubjectTools = () => {
     try {
       // Fetch from static tools.json file
       // Use $fetch from Nuxt which handles SSR correctly
-      metadata.value = await $fetch<SubjectMetadata>(repoUrl)
+      manifest.value = await $fetch<SubjectManifest>(repoUrl)
     } catch (err: any) {
       error.value = err?.message || 'Failed to load tools'
-      console.error('[useSubjectTools] Failed to load metadata:', err)
+      console.error('[useSubjectTools] Failed to load manifest:', err)
     } finally {
       loading.value = false
     }
@@ -59,8 +59,8 @@ export const useSubjectTools = () => {
    * Set the active tool to display in iframe
    */
   const setActiveTool = (toolId: string) => {
-    if (!metadata.value) return
-    const tool = metadata.value.tools.find(t => t.id === toolId)
+    if (!manifest.value) return
+    const tool = manifest.value.tools.find(t => t.id === toolId)
     if (tool) {
       activeTool.value = tool
     }
@@ -86,17 +86,17 @@ export const useSubjectTools = () => {
   }
 
   /**
-   * Get subject title from metadata
+   * Get subject title from manifest
    */
   const getSubjectTitle = (): string | undefined => {
-    return metadata.value?.title
+    return manifest.value?.title
   }
 
   /**
-   * Get subject description from metadata
+   * Get subject description from manifest
    */
   const getSubjectDescription = (): string | undefined => {
-    return metadata.value?.description
+    return manifest.value?.description
   }
 
   // Exit fullscreen when closing the active tool
@@ -109,11 +109,11 @@ export const useSubjectTools = () => {
   }
 
   return {
-    metadata,
+    manifest,
     activeTool,
     loading,
     error,
-    loadMetadata,
+    loadManifest,
     setActiveTool,
     clearActiveTool,
     getToolUrl,
