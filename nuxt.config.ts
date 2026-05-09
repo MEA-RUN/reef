@@ -14,14 +14,6 @@ export default defineNuxtConfig({
   //   }
   // },
 
-  i18n: {
-    locales: [
-      { code: 'fr', name: 'Français' },
-      { code: 'en', name: 'English' },
-    ],
-    defaultLocale: 'fr'
-  },
-
   ui: {
     theme: {
       colors: [
@@ -38,7 +30,7 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2026-03-12",
 
-  modules: ["@nuxt/icon", '@nuxt/ui', '@nuxtjs/mdc', '@nuxtjs/i18n', '@nuxt/fonts'],
+  modules: ["@nuxt/icon", '@nuxt/ui', '@nuxtjs/mdc', '@nuxt/fonts'],
 
   mdc: {
     highlight: {
