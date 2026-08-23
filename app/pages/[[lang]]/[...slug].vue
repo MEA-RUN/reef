@@ -9,7 +9,7 @@ import {
   inject,
   useDocusI18n
 } from "#imports";
-import { computed, ref, watch, onMounted, nextTick } from "vue";
+import { computed, ref, watch, nextTick } from "vue";
 import { useMobileLayout } from "../../composables/useMobileLayout";
 import { useRoute } from "vue-router";
 import { createError, useAppConfig, useAsyncData } from "nuxt/app";
@@ -69,7 +69,7 @@ watch(() => navigation?.value, () => {
 })
 
 // Handle tool frontmatter
-const { setActiveTool, metadata, loadMetadata } = useSubjectTools()
+const { setActiveTool, manifest, loadManifest } = useSubjectTools()
 const { toggleSidePanel, isOpen } = useSidePanel()
 
 // Computed property to get tool from page
@@ -83,13 +83,13 @@ const pageTool = computed(() => {
 const openToolFromFrontmatter = async (toolId: string) => {
   if (import.meta.server) return
   if (isMobileLayout.value) return
-  if (!metadata.value) await loadMetadata('/tools.json')
-  if (!metadata.value) {
+  if (!manifest.value) await loadManifest('/tools/manifests.json')
+  if (!manifest.value) {
     console.warn('[Page] ❌ Metadata not available after loading')
     return
   }
 
-  const tool = metadata.value.tools.find(t => t.id === toolId)
+  const tool = manifest.value.tools.find(t => t.id === toolId)
   if (tool) {
     setActiveTool(toolId)
     await nextTick()
@@ -102,13 +102,6 @@ const openToolFromFrontmatter = async (toolId: string) => {
     console.warn('[Page] ❌ Tool specified in frontmatter not found:', toolId)
   }
 }
-
-// Load metadata on mount (client-side only)
-onMounted(async () => {
-  if (!metadata.value) {
-    await loadMetadata('/tools.json')
-  }
-})
 
 // Watch for page tool changes
 watch(pageTool, async (newTool) => {

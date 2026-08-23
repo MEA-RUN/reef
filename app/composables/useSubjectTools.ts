@@ -1,4 +1,6 @@
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch } from 'vue'
+import { useRuntimeConfig } from 'nuxt/app'
+import { withBase } from 'ufo'
 
 export interface Tool {
   id: string
@@ -28,6 +30,9 @@ const loading = ref(false)
 const error = ref<string | null>(null)
 
 export const useSubjectTools = () => {
+  const baseURL = useRuntimeConfig().app.baseURL
+  const resolvePublicPath = (path: string) => path.startsWith('http') ? path : withBase(path, baseURL)
+
   /**
    * Load manifest from a subject repository
    * @param repoUrl - GitHub repository URL or path to manifest.json
@@ -45,7 +50,11 @@ export const useSubjectTools = () => {
     try {
       // Fetch from static tools.json file
       // Use $fetch from Nuxt which handles SSR correctly
-      manifest.value = await $fetch<SubjectManifest>(repoUrl)
+      const data = await $fetch<SubjectManifest>(resolvePublicPath(repoUrl))
+      manifest.value = {
+        ...data,
+        tools: Array.isArray(data.tools) ? data.tools : [],
+      }
     } catch (err: any) {
       error.value = err?.message || 'Failed to load tools'
       console.error('[useSubjectTools] Failed to load manifest:', err)
@@ -79,10 +88,10 @@ export const useSubjectTools = () => {
   const getToolUrl = (tool: Tool): string => {
     // If tool has explicit path, use it
     if (tool.path) {
-      return tool.path
+      return resolvePublicPath(tool.path)
     }
     // Otherwise, construct path from id
-    return `/tools/${tool.id}/index.html`
+    return resolvePublicPath(`/tools/${tool.id}/index.html`)
   }
 
   /**

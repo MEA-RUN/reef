@@ -49,7 +49,6 @@ html, body {
         <div class="scroll-container">
           <UContainer>
             <slot />
-            <AppFooter/>
           </UContainer>
         </div>
       </SplitterPanel>
@@ -80,17 +79,17 @@ html, body {
               <div class="flex items-center gap-2">
                 <UButton
                     size="sm"
-                    color="gray"
+                    color="neutral"
                     variant="ghost"
-                    :icon="isFullscreen ? 'i-heroicons-arrows-pointing-in' : 'i-heroicons-arrows-pointing-out'"
+                    :icon="isFullscreen ? 'i-lucide-minimize-2' : 'i-lucide-maximize-2'"
                     :aria-label="isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'"
                     @click="toggleFullscreen()"
                 />
                 <UButton
                     size="sm"
-                    color="gray"
+                    color="neutral"
                     variant="ghost"
-                    icon="i-heroicons-x-mark"
+                    icon="i-lucide-x"
                     @click="clearActiveTool"
                 />
               </div>

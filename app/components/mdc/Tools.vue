@@ -27,7 +27,7 @@ const props = defineProps<{
   id?: string          // MDC unnamed parameter (:::tools match)
   toolId?: string      // Alternative explicit prop
 }>()
-const { metadata, loadMetadata, setActiveTool } = useSubjectTools()
+const { manifest, loadManifest, setActiveTool } = useSubjectTools()
 const { toggleSidePanel, isOpen } = useSidePanel()
 
 const toolNotFound = ref(false)
@@ -42,16 +42,16 @@ const buttonText = computed(() => {
 
 // Get tool icon from metadata
 const toolIcon = computed(() => {
-  if (!metadata.value || !actualToolId.value) return 'i-lucide-box'
+  if (!manifest.value || !actualToolId.value) return 'i-lucide-box'
 
-  const tool = metadata.value.tools.find(t => t.id === actualToolId.value)
+  const tool = manifest.value.tools.find(t => t.id === actualToolId.value)
   return tool?.icon || 'i-lucide-box'
 })
 
 // Load metadata on mount
 onMounted(async () => {
-  if (!metadata.value) {
-    await loadMetadata('/tools.json')
+  if (!manifest.value) {
+    await loadManifest('/tools/manifests.json')
   }
 })
 
@@ -63,12 +63,12 @@ const openTool = () => {
     return
   }
 
-  if (!metadata.value) {
+  if (!manifest.value) {
     console.warn('[ToolButton] Metadata not loaded')
     return
   }
 
-  const tool = metadata.value.tools.find(t => t.id === toolId)
+  const tool = manifest.value.tools.find(t => t.id === toolId)
 
   if (!tool) {
     console.warn('[ToolButton] Tool not found:', toolId)
