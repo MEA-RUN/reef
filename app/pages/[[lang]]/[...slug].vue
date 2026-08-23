@@ -20,6 +20,7 @@ const { isMobileLayout, leftSideIsTooSmall } = useMobileLayout();
 
 definePageMeta({
   layout: 'docs',
+  footer: false,
 })
 
 const route = useRoute()

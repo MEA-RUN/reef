@@ -49,6 +49,7 @@ html, body {
         <div class="scroll-container">
           <UContainer>
             <slot />
+            <AppFooter />
           </UContainer>
         </div>
       </SplitterPanel>
