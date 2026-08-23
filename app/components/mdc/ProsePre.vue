@@ -126,7 +126,7 @@ const ui = computed(() => tv({
 .shiki span.line.highlight{
   margin:0 -16px;
   padding:0 16px;
-  @apply bg-(--ui-bg-accented)/50
+  background-color: color-mix(in oklab, var(--ui-bg-accented) 50%, transparent);
 }
 </style>
 

@@ -17,12 +17,10 @@
         "docus": "5.11.0",
         "mermaid": "11.14.0",
         "nuxt": "4.4.4",
+        "sass-embedded": "1.99.0",
         "typescript": "5.9.3",
         "zod": "3.25.76",
         "zod-to-json-schema": "3.25.2",
-      },
-      "devDependencies": {
-        "sass-embedded": "1.99.0",
       },
     },
   },

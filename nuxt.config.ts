@@ -44,7 +44,38 @@ export default defineNuxtConfig({
 
   components: true,
 
+  hooks: {
+    'app:templates'(app) {
+      const docusCss = app.templates.find(template => template.filename === 'docus.css')
+
+      if (docusCss)
+        docusCss.write = true
+    },
+  },
+
+  robots: {
+    robotsTxt: false,
+  },
+
   vite: {
+    plugins: [
+      {
+        name: 'docus-og-raster-logo',
+        enforce: 'pre',
+        transform(code, id) {
+          if (!id.includes('/docus/app/components/OgImage/Landing.takumi.vue'))
+            return
+
+          const transformed = code.replace(
+            "if (!path) return ''",
+            "if (!path || !path.endsWith('.svg')) return ''",
+          )
+
+          if (transformed !== code)
+            return { code: transformed, map: null }
+        },
+      },
+    ],
     optimizeDeps: {
       include: [
         'mermaid',

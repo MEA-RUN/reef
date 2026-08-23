@@ -42,10 +42,10 @@ const buttonText = computed(() => {
 
 // Get tool icon from metadata
 const toolIcon = computed(() => {
-  if (!metadata.value || !actualToolId.value) return 'i-heroicons-cube'
+  if (!metadata.value || !actualToolId.value) return 'i-lucide-box'
 
   const tool = metadata.value.tools.find(t => t.id === actualToolId.value)
-  return tool?.icon || 'i-heroicons-cube'
+  return tool?.icon || 'i-lucide-box'
 })
 
 // Load metadata on mount

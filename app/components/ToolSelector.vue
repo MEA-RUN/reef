@@ -10,7 +10,7 @@
     <!-- Loading state -->
     <div v-if="loading" class="flex-1 flex items-center justify-center">
       <div class="text-center">
-        <UIcon name="i-heroicons-arrow-path" class="w-8 h-8 animate-spin text-primary mb-2" />
+        <UIcon name="i-lucide-loader-circle" class="w-8 h-8 animate-spin text-primary mb-2" />
         <p class="text-sm text-muted">Loading tools...</p>
       </div>
     </div>
@@ -18,7 +18,7 @@
     <!-- Error state -->
     <div v-else-if="error" class="flex-1 flex items-center justify-center p-6">
       <div class="text-center">
-        <UIcon name="i-heroicons-exclamation-triangle" class="w-12 h-12 text-error mb-4" />
+        <UIcon name="i-lucide-triangle-alert" class="w-12 h-12 text-error mb-4" />
         <p class="text-error font-semibold mb-2">Failed to load tools</p>
         <p class="text-sm text-muted">{{ error }}</p>
         <UButton
@@ -64,7 +64,7 @@
           <template #trailing>
             <UIcon
                 v-if="activeTool?.id === tool.id"
-                name="i-heroicons-chevron-right"
+                name="i-lucide-chevron-right"
                 class="w-6 h-6 text-primary"
             />
           </template>
@@ -75,7 +75,7 @@
     <!-- Empty state -->
     <div v-else class="flex-1 flex items-center justify-center p-6">
       <div class="text-center">
-        <UIcon name="i-heroicons-cube" class="w-12 h-12 text-muted mb-4" />
+        <UIcon name="i-lucide-box" class="w-12 h-12 text-muted mb-4" />
         <p class="text-muted">No tools available</p>
       </div>
     </div>
