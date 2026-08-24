@@ -1,149 +1,108 @@
-# Reef - Nuxt Documentation Layer
+# Reef
 
-> A reusable Nuxt layer for creating documentation sites with Docus
+Reef is the reusable Nuxt layer that powers Manta Academy subject websites. It
+extends [Docus](https://docus.dev) with the layouts, components, localization,
+and interactive tool panel needed by the subject publishing workflow.
 
-This project is configured as a Nuxt layer that provides components, composables, layouts, and pages for building beautiful documentation sites with Markdown and Vue components.
+Students normally do not install or configure Reef directly. They create a
+repository from [`subject-template`](https://github.com/MEA-RUN/subject-template),
+write Markdown, configure optional tools, and push to `main`. The shared GitHub
+Actions workflow builds and publishes the resulting site to the same
+repository's `gh-pages` branch.
 
-## ✨ Features
+## Repository roles
 
-- 🎨 **Beautiful Design** - Clean, modern documentation theme
-- 📱 **Responsive** - Mobile-first responsive design
-- 🌙 **Dark Mode** - Built-in dark/light mode support
-- 🔍 **Search** - Full-text search functionality
-- 📝 **Markdown Enhanced** - Extended markdown with custom components
-- 🎨 **Customizable** - Easy theming and brand customization
-- ⚡ **Fast** - Optimized for performance with Nuxt 4
-- 🔧 **TypeScript** - Full TypeScript support
-- 🧩 **Reusable Layer** - Can be extended by other Nuxt projects
+| Repository | Purpose |
+| --- | --- |
+| [`reef`](https://github.com/MEA-RUN/reef) | Nuxt layer containing the subject UI and runtime behavior |
+| [`subject-template`](https://github.com/MEA-RUN/subject-template) | Student-facing repository template |
+| [`reef-site-template`](https://github.com/MEA-RUN/reef-site-template) | Minimal, machine-facing Nuxt application used during builds |
+| [`actions`](https://github.com/MEA-RUN/actions) | Reusable workflow that assembles and deploys a subject site |
+| [`tool-template`](https://github.com/MEA-RUN/tool-template) | Starting point for standalone interactive tools |
 
-## 🚀 Using as a Nuxt Layer
+## Features
 
-### Installation
+- Docus-based documentation pages and navigation
+- Markdown content powered by Nuxt Content
+- Optional English and French routes
+- Mermaid diagrams and enhanced code blocks
+- Responsive split-screen panel for interactive tools
+- GitHub Pages-compatible asset and iframe paths
+- Manta Academy branding with overridable Nuxt components and app config
 
-**Option 1: Local File System**
-```typescript
+## Localization
+
+Reef detects localized content from the consuming project's directory
+structure:
+
+- `content/en` enables English;
+- `content/fr` enables French;
+- both directories enable the locale switcher;
+- when neither directory exists, the i18n module is not loaded.
+
+This keeps single-language subject sites free of unnecessary locale prefixes
+and configuration.
+
+## Interactive tools
+
+The deployment workflow generates `public/tools/manifests.json` from the
+subject repository's `metadata.yml`. A Markdown page can open a configured tool
+in Reef's right-hand panel with the `tools` MDC component:
+
+```mdc
+:::tools{id="match"}
+Open the matching tool
+:::
+```
+
+Tools may come from a public GitHub repository or from a local directory in the
+subject repository. See the
+[`subject-template` documentation](https://github.com/MEA-RUN/subject-template)
+for the manifest format.
+
+## Using Reef as a Nuxt layer
+
+The publishing workflow uses the dedicated site base, but Reef can also be
+extended directly by another Nuxt application:
+
+```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  extends: [
-    '../path/to/reef-dev'
-  ]
+  extends: ['github:MEA-RUN/reef'],
 })
 ```
 
-**Option 2: Git Repository**
-```typescript
-// nuxt.config.ts
-export default defineNuxtConfig({
-  extends: [
-    'github:your-username/reef-dev'
-  ]
-})
-```
+Files in the consuming project take precedence over files provided by the
+layer, so its components, layouts, pages, public assets, and app configuration
+can be overridden through standard Nuxt layer conventions.
 
-**Option 3: npm Package**
-```bash
-npm install reef
-```
-```typescript
-// nuxt.config.ts
-export default defineNuxtConfig({
-  extends: [
-    'reef'
-  ]
-})
-```
+## Development
 
-### Development Mode
-
-To develop this layer standalone:
+Reef uses Bun 1.4:
 
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
+bun install --frozen-lockfile
+bun run dev
 ```
 
-Your documentation site will be running at `http://localhost:3000`
-
-## 📁 What This Layer Provides
-
-When you extend this layer, your project will have access to:
-
-### **Components**
-- `MermaidChart.vue` - Render Mermaid diagrams
-- `ToolSelector.vue` - Interactive tool selector
-- `AppFooter.vue` / `AppHeader.vue` - Default header and footer
-- `ProsePre.vue` - Enhanced code block component
-- `Tools.vue` - MDC tools component
-
-### **Composables**
-- `useMobileLayout()` - Mobile layout detection and utilities
-- `useSidePanel()` - Side panel state management
-- `useSubjectTools()` - Subject-specific tool management
-
-### **Layouts**
-- `default.vue` - Default page layout
-- `docs.vue` - Documentation-specific layout
-
-### **Pages**
-- Multi-language routes with `[[lang]]/[...slug].vue`
-
-### **Assets & Styling**
-- Pre-configured Tailwind CSS with custom Manta theme colors
-- MDC syntax highlighting (Material Theme)
-
-### **Configuration**
-- Nuxt UI theme with custom colors
-- MDC with code highlighting (bash, TypeScript, Vue, etc.)
-- Mermaid diagram support
-
-## ⚡ Built with
-
-This layer extends and includes:
-
-- [Nuxt 4](https://nuxt.com) - The web framework
-- [Docus Layer](https://www.npmjs.com/package/docus) - Documentation theme base
-- [Nuxt Content (@nuxtjs/mdc)](https://content.nuxt.com/) - Markdown components
-- [Nuxt UI](https://ui.nuxt.com) - UI components
-- [Nuxt Icon](https://nuxt.com/modules/icon) - Icon component
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
-- [Mermaid](https://mermaid.js.org/) - Diagram rendering
-
-## 🎨 Customization in Your Project
-
-When extending this layer, you can override any component, composable, or page:
-
-```
-your-project/
-├── nuxt.config.ts       # Extends 'reef'
-├── app/
-│   ├── components/      # Override layer components
-│   └── composables/     # Override layer composables
-├── content/             # Your documentation content
-└── public/              # Your static assets
-```
-
-Any file you create in your project will take precedence over the layer's files.
-
-## 📖 Documentation
-
-For detailed documentation on:
-- **Using Nuxt Layers**: [Nuxt Layers Guide](https://nuxt.com/docs/guide/going-further/layers)
-- **Docus theme customization**: [Docus Documentation](https://docus.dev)
-- **Markdown content**: [Nuxt Content](https://content.nuxt.com/)
-
-## 🚀 Deployment
-
-When deploying a project that extends this layer:
+The development server is available at `http://localhost:3000`. Run the full
+production build before submitting a change:
 
 ```bash
-npm run build
+bun run build
 ```
 
-The built files will be in the `.output` directory, ready for deployment to any hosting provider that supports Node.js.
+The build output is written to `.output`.
 
-## 📄 License
+## Main dependencies
 
-[MIT License](https://opensource.org/licenses/MIT) 
+- [Nuxt](https://nuxt.com)
+- [Docus](https://docus.dev)
+- [Nuxt Content](https://content.nuxt.com)
+- [Nuxt UI](https://ui.nuxt.com)
+- [Nuxt i18n](https://i18n.nuxtjs.org)
+- [Mermaid](https://mermaid.js.org)
+
+## License
+
+Reef is available under the [MIT License](./LICENSE).
