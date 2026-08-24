@@ -23,7 +23,7 @@
     "gtm": "node scripts/generate-tools-metadata.js"
   },
   "dependencies": {
-    "@nuxt/content": "3.13.0",
+    "@nuxt/content": "^3.13.0",
     "@nuxt/fonts": "0.14.0",
     "@nuxt/icon": "2.2.2",
     "@nuxt/ui": "4.7.1",
