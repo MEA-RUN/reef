@@ -91,6 +91,7 @@ export default defineNuxtConfig({
         'mermaid',
         '@vue/devtools-core',
         '@vue/devtools-kit',
+        '@vueuse/core',
       ]
     }
   }
