@@ -1,3 +1,5 @@
+const sourceRepository = process.env.REEF_SOURCE_REPOSITORY
+
 export default defineAppConfig({
     docus: {
         locale: 'fr', // Default: 'en'
@@ -41,7 +43,7 @@ export default defineAppConfig({
     },
 
     github: {
-        url: 'https://github.com/MEA-RUN/${SUBJECT_NAME}',
+        url: sourceRepository ? `https://github.com/${sourceRepository}` : undefined,
         branch: 'main'
     },
 

@@ -116,12 +116,13 @@ const github = computed(() => appConfig.github ? appConfig.github : null)
 
 const editLink = computed(() => {
   if (!github.value) return
+  const contentDir = (github.value as typeof github.value & { contentDir?: string }).contentDir || 'content'
   return [
     github.value.url,
     'edit',
     github.value.branch,
     github.value.rootDir,
-    'content',
+    contentDir,
     `${page.value?.stem}.${page.value?.extension}`,
   ].filter(Boolean).join('/')
 })
