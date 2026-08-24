@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from "reka-ui";
-import { watch } from 'vue';
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useSidePanel } from "../composables/useSidePanel";
 import { useMobileLayout } from "../composables/useMobileLayout";
@@ -11,12 +11,22 @@ const { isMobileLayout, checkWidth, watchIsMobileLayout } = useMobileLayout();
 const { activeTool, getToolUrl, clearActiveTool, watchActiveTool } = useSubjectTools();
 
 const route = useRoute();
+const confirmCloseTool = ref(false);
 
 watchScrollToTop(route, checkWidth);
 watchScrollToTarget(route);
 watchIsMobileLayout(isOpen, toggleSidePanel);
 watchActiveTool(isFullscreen, toggleFullscreen);
 watchIsOpen();
+
+const requestCloseTool = () => {
+  confirmCloseTool.value = true;
+};
+
+const confirmClose = () => {
+  confirmCloseTool.value = false;
+  clearActiveTool();
+};
 
 </script>
 
@@ -91,7 +101,8 @@ html, body {
                     color="neutral"
                     variant="ghost"
                     icon="i-lucide-x"
-                    @click="clearActiveTool"
+                    aria-label="Close tool"
+                    @click="requestCloseTool"
                 />
               </div>
             </div>
@@ -108,5 +119,17 @@ html, body {
       </template>
 
     </SplitterGroup>
+
+    <UModal
+        v-model:open="confirmCloseTool"
+        title="Close this tool?"
+        description="If you close this tool, all of its content will be lost. This cannot be undone."
+        :ui="{ footer: 'justify-end' }"
+    >
+      <template #footer="{ close }">
+        <UButton label="Cancel" color="neutral" variant="outline" @click="close" />
+        <UButton label="Close tool" color="error" @click="confirmClose" />
+      </template>
+    </UModal>
   </UMain>
 </template>
