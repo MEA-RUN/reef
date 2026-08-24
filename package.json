@@ -12,6 +12,7 @@
   "main": "./nuxt.config.ts",
   "files": [
     "app",
+    "config",
     "content/**/index.md",
     "public",
     "nuxt.config.ts",

@@ -1,4 +1,12 @@
 import { defineNuxtConfig } from "nuxt/config";
+import { configureI18n } from './config/i18n'
+
+const modules = [
+  "@nuxt/icon",
+  '@nuxt/ui',
+  '@nuxtjs/mdc',
+  '@nuxt/fonts',
+]
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -13,15 +21,6 @@ export default defineNuxtConfig({
   //     enabled: true
   //   }
   // },
-
-  i18n: {
-    baseUrl: process.env.NUXT_SITE_URL,
-    defaultLocale: 'fr',
-    locales: [
-      { code: 'fr', name: 'Français' },
-      { code: 'en', name: 'English' },
-    ],
-  },
 
   ui: {
     theme: {
@@ -39,7 +38,7 @@ export default defineNuxtConfig({
 
   compatibilityDate: "2026-03-12",
 
-  modules: ["@nuxt/icon", '@nuxt/ui', '@nuxtjs/mdc', '@nuxt/fonts', '@nuxtjs/i18n'],
+  modules,
 
   mdc: {
     highlight: {
@@ -54,6 +53,8 @@ export default defineNuxtConfig({
   components: true,
 
   hooks: {
+    'modules:before': () => configureI18n(modules),
+
     'app:templates'(app) {
       const docusCss = app.templates.find(template => template.filename === 'docus.css')
 
