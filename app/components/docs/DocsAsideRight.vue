@@ -23,6 +23,11 @@ const { shouldPushContent: shouldHideToc } = useAssistant()
 const appConfig = useAppConfig()
 const { t } = useDocusI18n()
 const tocTitle = computed(() => (appConfig as any)?.toc?.title || t('docs.toc'))
+
+const fallbackNavigationUi = {
+  link: 'min-w-0 items-start after:absolute after:-left-1.5 after:inset-y-0.5 after:block after:w-px after:rounded-full after:transition-colors',
+  linkTitle: 'min-w-0 flex-1 text-left! whitespace-normal break-normal overflow-visible! leading-snug'
+}
 </script>
 
 <template>
@@ -36,7 +41,11 @@ const tocTitle = computed(() => (appConfig as any)?.toc?.title || t('docs.toc'))
       :ui="tocUi"
     >
       <template #bottom>
-        <DocsAsideLeftBody v-if="props.showLeftFallback" class="pb-3" />
+        <DocsAsideLeftBody
+          v-if="props.showLeftFallback"
+          class="min-w-0 pb-3"
+          :ui="fallbackNavigationUi"
+        />
         <DocsAsideRightBottom />
       </template>
     </UContentToc>
