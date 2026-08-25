@@ -1,5 +1,5 @@
 import { defineNuxtPlugin } from "nuxt/app";
-import { useMobileLayout } from "../composables/useMobileLayout";
+import { useMobileLayout } from "~/composables/useMobileLayout";
 
 export default defineNuxtPlugin(() => {
     const { initObserver, cleanupObserver } = useMobileLayout();

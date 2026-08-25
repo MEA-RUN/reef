@@ -10,11 +10,11 @@ import {
   useDocusI18n
 } from "#imports";
 import { computed, ref, watch, nextTick } from "vue";
-import { useMobileLayout } from "../../composables/useMobileLayout";
+import { useMobileLayout } from "~/composables/useMobileLayout";
 import { useRoute } from "vue-router";
 import { createError, useAppConfig, useAsyncData } from "nuxt/app";
-import { useSubjectTools } from "../../composables/useSubjectTools";
-import { useSidePanel } from "../../composables/useSidePanel";
+import { useSubjectTools } from "~/composables/useSubjectTools";
+import { useSidePanel } from "~/composables/useSidePanel";
 
 const { isMobileLayout, leftSideIsTooSmall } = useMobileLayout();
 
@@ -133,22 +133,22 @@ const pageUi = computed(() => ({
 <template>
   <UPage
     v-if="page"
-    class="lg:grid-cols-10 lg:min-w-[920px]"
+    class="lg:grid-cols-10 lg:min-w-[920px] lg:gap-4!"
     :ui="pageUi"
     :key="`page-${shouldHideToc}`"
   >
     <template #left>
       <template v-if="!leftSideIsTooSmall">
         <UPageAside
-          class="lg:w-80 lg:min-w-80 lg:shrink-0 lg:sticky lg:top-[calc(var(--ui-header-height)-65px)] lg:overflow-y-auto"
+          class="w-full min-w-0 lg:pe-0! lg:sticky lg:top-[calc(var(--ui-header-height)-65px)] lg:overflow-y-auto"
       >
         <DocsAsideLeftTop />
         <DocsAsideLeftBody
           class="pl-2"
           style="margin-top: -7px;"
           :ui="{
-            link: 'after:absolute after:-left-1.5 after:inset-y-0.5 after:block after:w-px after:rounded-full after:transition-colors',
-            linkTitle: 'overflow-visible',
+            link: 'min-w-0 items-start after:absolute after:-left-1.5 after:inset-y-0.5 after:block after:w-px after:rounded-full after:transition-colors',
+            linkTitle: 'min-w-0 flex-1 text-left! whitespace-normal break-normal overflow-visible! leading-snug',
           }"
         />
       </UPageAside>

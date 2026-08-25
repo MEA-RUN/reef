@@ -2,9 +2,9 @@
 import { SplitterGroup, SplitterPanel, SplitterResizeHandle } from "reka-ui";
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useSidePanel } from "../composables/useSidePanel";
-import { useMobileLayout } from "../composables/useMobileLayout";
-import { useSubjectTools } from "../composables/useSubjectTools";
+import { useSidePanel } from "~/composables/useSidePanel";
+import { useMobileLayout } from "~/composables/useMobileLayout";
+import { useSubjectTools } from "~/composables/useSubjectTools";
 
 const { isOpen, isFullscreen, toggleSidePanel, toggleFullscreen, watchScrollToTop, watchScrollToTarget, watchIsOpen } = useSidePanel();
 const { isMobileLayout, checkWidth, watchIsMobileLayout } = useMobileLayout();

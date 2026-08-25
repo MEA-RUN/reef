@@ -18,8 +18,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useSubjectTools } from '../../composables/useSubjectTools'
-import { useSidePanel } from '../../composables/useSidePanel'
+import { useSubjectTools } from "~/composables/useSubjectTools"
+import { useSidePanel } from "~/composables/useSidePanel"
 
 // MDC passes the first parameter as an unnamed prop or id
 // :::tools match => id='match' or first unnamed param

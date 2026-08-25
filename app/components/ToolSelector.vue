@@ -84,7 +84,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useSubjectTools } from '../composables/useSubjectTools'
+import { useSubjectTools } from "~/composables/useSubjectTools"
 
 const {
   manifest,

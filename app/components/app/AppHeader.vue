@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useDocusI18n } from "#imports";
-import { useMobileLayout } from "../../composables/useMobileLayout";
-import { useSidePanel } from "../../composables/useSidePanel";
+import { useMobileLayout } from "~/composables/useMobileLayout";
+import { useSidePanel } from "~/composables/useSidePanel";
 
 const appConfig = useAppConfig()
 const site = useSiteConfig()
