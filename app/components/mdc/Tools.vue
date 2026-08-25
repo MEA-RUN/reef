@@ -21,19 +21,15 @@ import { ref, computed, onMounted } from 'vue'
 import { useSubjectTools } from "~/composables/useSubjectTools"
 import { useSidePanel } from "~/composables/useSidePanel"
 
-// MDC passes the first parameter as an unnamed prop or id
-// :::tools match => id='match' or first unnamed param
 const props = defineProps<{
-  id?: string          // MDC unnamed parameter (:::tools match)
-  toolId?: string      // Alternative explicit prop
+  id?: string
 }>()
 const { manifest, loadManifest, setActiveTool } = useSubjectTools()
 const { toggleSidePanel, isOpen } = useSidePanel()
 
 const toolNotFound = ref(false)
 
-// Get the actual tool ID from either prop
-const actualToolId = computed(() => props.id || props.toolId)
+const actualToolId = computed(() => props.id)
 
 // Get button text from slot or use default
 const buttonText = computed(() => {
