@@ -1,15 +1,20 @@
-
 <script setup lang="ts">
-import { kebabCase } from 'scule'
-import type { ContentNavigationItem, Collections } from '@nuxt/content'
-import { findPageHeadline } from '@nuxt/content/utils'
+import { kebabCase } from "scule";
+import type { ContentNavigationItem, Collections, DocsFrCollectionItem } from "@nuxt/content";
+import { findPageHeadline } from "@nuxt/content/utils";
 import {
   addPrerenderPath,
   definePageMeta,
   inject,
-  useDocusI18n
+  useDocusI18n,
+  useSeoMeta,
+  useAssistant,
+  defineOgImage,
+  findPageBreadcrumbs,
+  useSeo,
 } from "#imports";
-import { computed, ref, watch, nextTick } from "vue";
+import { ref, watch, nextTick } from "vue";
+import { computed } from "@vue/reactivity";
 import { useMobileLayout } from "~/composables/useMobileLayout";
 import { useRoute } from "vue-router";
 import { createError, useAppConfig, useAsyncData } from "nuxt/app";
@@ -18,160 +23,161 @@ import { useSidePanel } from "~/composables/useSidePanel";
 
 const { isMobileLayout, leftSideIsTooSmall } = useMobileLayout();
 
+// Taken from https://github.com/nuxt-content/docus/blob/main/layer/app/pages/%5B%5Blang%5D%5D/%5B...slug%5D.vue
+
 definePageMeta({
-  layout: 'docs',
-})
+  layout: "docs",
+});
 
-const route = useRoute()
-const { locale, isEnabled, t } = useDocusI18n()
-const appConfig = useAppConfig()
-const navigation = inject<Ref<ContentNavigationItem[]>>('navigation')
-const { shouldPushContent: shouldHideToc } = useAssistant()
+const route = useRoute();
+const { locale, isEnabled, t } = useDocusI18n();
+const appConfig = useAppConfig();
+const navigation = inject<Ref<ContentNavigationItem[]>>("navigation");
+const { shouldPushContent: shouldHideToc } = useAssistant();
 
-const collectionName = computed(() => isEnabled.value ? `docs_${locale.value}` : 'docs')
+const collectionName = computed(() => isEnabled.value ? `docs_${locale.value}` : "docs");
 
 const shouldShowReducePage = computed(() => {
-  return !isMobileLayout.value && isOpen.value
-})
+  return !isMobileLayout.value && isOpen.value;
+});
 
 const [{ data: page }, { data: surround }] = await Promise.all([
-  useAsyncData(kebabCase(route.path), () => queryCollection(collectionName.value as keyof Collections).path(route.path).first() as Promise<DocsCollectionItem>),
+  useAsyncData(kebabCase(route.path), () => queryCollection(collectionName.value as keyof Collections).path(route.path).first() as Promise<DocsFrCollectionItem>),
   useAsyncData(`${kebabCase(route.path)}-surround`, () => {
     return queryCollectionItemSurroundings(collectionName.value as keyof Collections, route.path, {
-      fields: ['description'],
-    })
+      fields: ["description"],
+    });
   }),
-])
+]);
 
 if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
+  throw createError({ status: 404, message: "Page not found", fatal: true });
 }
 
 // Add the page path to the prerender list
-addPrerenderPath(`/raw${route.path}.md`)
+addPrerenderPath(`/raw${route.path}.md`);
 
-const title = page.value.seo?.title || page.value.title
-const description = page.value.seo?.description || page.value.description
-const breadcrumbs = computed(() => findPageBreadcrumbs(navigation?.value, page.value?.path || ''))
+const title = page.value.seo?.title || page.value.title;
+const description = page.value.seo?.description || page.value.description;
+const breadcrumbs = computed(() => findPageBreadcrumbs(navigation?.value, page.value?.path || ""));
 
 useSeoMeta({
   title,
   ogTitle: title,
   description,
-  type: 'article',
-  modifiedAt: (page.value as unknown as Record<string, unknown>).modifiedAt as string | undefined,
-  breadcrumbs
-})
+  ogType: "article",
+  articleModifiedTime: (page.value as unknown as Record<string, unknown>).modifiedAt as string | undefined,
+  breadcrumbs,
+});
 
-const headline = ref(findPageHeadline(navigation?.value, page.value?.path))
+const headline = ref(findPageHeadline(navigation?.value, page.value?.path));
 watch(() => navigation?.value, () => {
-  headline.value = findPageHeadline(navigation?.value, page.value?.path) || headline.value
-})
+  headline.value = findPageHeadline(navigation?.value, page.value?.path) || headline.value;
+});
 
 // Handle tool frontmatter
-const { setActiveTool, manifest, loadManifest } = useSubjectTools()
-const { toggleSidePanel, isOpen } = useSidePanel()
+const { setActiveTool, manifest, loadManifest } = useSubjectTools();
+const { toggleSidePanel, isOpen } = useSidePanel();
 
 // Computed property to get tool from page
 const pageTool = computed(() => {
-  const tool =  page.value?.meta?.tool
-  if (tool) console.log('[Page] Tool found:', tool)
-  return tool
-})
+  const tool = page.value?.meta?.tool; // TODO: fix type unknown
+  if (tool) console.log("[Page] Tool found:", tool);
+  return tool;
+});
 
 // Function to open tool from frontmatter
 const openToolFromFrontmatter = async (toolId: string) => {
-  if (import.meta.server) return
-  if (isMobileLayout.value) return
-  if (!manifest.value) await loadManifest('/tools/manifests.json')
+  if (import.meta.server) return;
+  if (isMobileLayout.value) return;
+  if (!manifest.value) await loadManifest("/tools/manifests.json");
   if (!manifest.value) {
-    console.warn('[Page] ❌ Metadata not available after loading')
-    return
+    console.warn("[Page] ❌ Metadata not available after loading");
+    return;
   }
 
-  const tool = manifest.value.tools.find(t => t.id === toolId)
+  const tool = manifest.value.tools.find(t => t.id === toolId);
   if (tool) {
-    setActiveTool(toolId)
-    await nextTick()
+    setActiveTool(toolId);
+    await nextTick();
     setTimeout(() => {
-      if (!isOpen.value) {
-        toggleSidePanel(true)
-      }
-    }, 150)
+      if (!isOpen.value)
+        toggleSidePanel(true);
+    }, 150);
   } else {
-    console.warn('[Page] ❌ Tool specified in frontmatter not found:', toolId)
+    console.warn("[Page] ❌ Tool specified in frontmatter not found:", toolId);
   }
-}
+};
 
 // Watch for page tool changes
 watch(pageTool, async (newTool) => {
-  if (newTool) await openToolFromFrontmatter(newTool)
-}, { immediate: true })
+  if (newTool) await openToolFromFrontmatter(newTool);
+}, { immediate: true });
 
-defineOgImageComponent('Docs', {
+defineOgImage("Docs", {
   headline: headline.value,
-})
+});
 
-const github = computed(() => appConfig.github ? appConfig.github : null)
+const github = computed(() => appConfig.github ? appConfig.github : null);
 
 const editLink = computed(() => {
-  if (!github.value) return
-  const contentDir = (github.value as typeof github.value & { contentDir?: string }).contentDir || 'content'
+  if (!github.value) return;
+  const contentDir = (github.value as typeof github.value & { contentDir?: string }).contentDir || "content";
   return [
     github.value.url,
-    'edit',
+    "edit",
     github.value.branch,
     github.value.rootDir,
     contentDir,
     `${page.value?.stem}.${page.value?.extension}`,
-  ].filter(Boolean).join('/')
-})
+  ].filter(Boolean).join("/");
+});
 const pageUi = computed(() => ({
-  center: isMobileLayout.value ? 'lg:col-span-8' : 'lg:col-span-6'
+  center: isMobileLayout.value ? "lg:col-span-8" : "lg:col-span-6",
 }));
 </script>
 <template>
   <UPage
-    v-if="page"
-    class="lg:grid-cols-10 lg:min-w-[920px] lg:gap-4!"
-    :ui="pageUi"
-    :key="`page-${shouldHideToc}`"
+      v-if="page"
+      class="lg:grid-cols-10 lg:min-w-[920px] lg:gap-4!"
+      :ui="pageUi"
+      :key="`page-${shouldHideToc}`"
   >
     <template #left>
       <template v-if="!leftSideIsTooSmall">
         <UPageAside
-          class="w-full min-w-0 lg:pe-0! lg:sticky lg:top-[calc(var(--ui-header-height)-65px)] lg:overflow-y-auto"
-      >
-        <DocsAsideLeftTop />
-        <DocsAsideLeftBody
-          class="pl-2"
-          style="margin-top: -7px;"
-          :ui="{
+            class="w-full min-w-0 lg:pe-0! lg:sticky lg:top-[calc(var(--ui-header-height)-65px)] lg:overflow-y-auto"
+        >
+          <DocsAsideLeftTop/>
+          <DocsAsideLeftBody
+              class="pl-2"
+              style="margin-top: -7px;"
+              :ui="{
             link: 'min-w-0 items-start after:absolute after:-left-1.5 after:inset-y-0.5 after:block after:w-px after:rounded-full after:transition-colors',
             linkTitle: 'min-w-0 flex-1 text-left! whitespace-normal break-normal overflow-visible! leading-snug',
           }"
-        />
-      </UPageAside>
+          />
+        </UPageAside>
       </template>
     </template>
 
     <UPageHeader
-      :title="page.title"
-      :description="page.description"
-      :headline="headline"
-      :ui="{
+        :title="page.title"
+        :description="page.description"
+        :headline="headline"
+        :ui="{
         wrapper: 'flex-row items-center flex-wrap justify-between',
       }"
     >
       <template #links>
         <UButton
-          v-for="(link, index) in (page as DocsCollectionItem).links"
-          :key="index"
-          size="sm"
-          v-bind="link"
+            v-for="(link, index) in (page as DocsCollectionItem).links"
+            :key="index"
+            size="sm"
+            v-bind="link"
         />
 
-        <DocsPageHeaderLinks />
+        <DocsPageHeaderLinks/>
       </template>
     </UPageHeader>
 
@@ -195,9 +201,9 @@ const pageUi = computed(() => ({
               icon="i-lucide-pen"
               :ui="{ leadingIcon: 'size-4' }"
           >
-            {{ t('docs.edit') }}
+            {{ t("docs.edit") }}
           </UButton>
-          <span>{{ t('common.or') }}</span>
+          <span>{{ t("common.or") }}</span>
           <UButton
               variant="link"
               color="neutral"
@@ -206,11 +212,11 @@ const pageUi = computed(() => ({
               icon="i-lucide-alert-circle"
               :ui="{ leadingIcon: 'size-4' }"
           >
-            {{ t('docs.report') }}
+            {{ t("docs.report") }}
           </UButton>
         </div>
       </USeparator>
-      <UContentSurround :surround="surround" />
+      <UContentSurround :surround="surround"/>
     </UPageBody>
 
     <!-- <template
@@ -238,9 +244,9 @@ const pageUi = computed(() => ({
 
     <template #right>
       <DocsAsideRight
-        :page="page"
-        :show-left-fallback="leftSideIsTooSmall"
-        :ui="{
+          :page="page"
+          :show-left-fallback="leftSideIsTooSmall"
+          :ui="{
           root: 'top-2!',
           linkText: 'whitespace-normal break-words'
         }"
