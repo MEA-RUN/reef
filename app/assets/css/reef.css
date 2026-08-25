@@ -1,0 +1,19 @@
+html,
+body {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+#__nuxt {
+  height: 100%;
+}
+
+.reef-split-view {
+  height: calc(100dvh - var(--ui-header-height));
+}
+
+.reef-scroll-container,
+.scroll-container {
+  height: 100%;
+  overflow: auto;
+}

@@ -51,6 +51,17 @@ export default defineAppConfig({
         colors: {
             primary: 'teal', // manta-primary
             secondary: 'red', // manta-secondary
+        },
+        contentNavigation: {
+            slots: {
+                link: 'min-w-0 items-start',
+                linkTitle: 'min-w-0 flex-1 text-left whitespace-normal break-normal overflow-visible leading-snug',
+            },
+        },
+        contentToc: {
+            slots: {
+                linkText: 'whitespace-normal break-words',
+            },
         }
     }
 })
