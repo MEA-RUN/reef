@@ -1,16 +1,15 @@
 <script setup lang="ts">
 const route = useRoute()
-const { isOpen, toggleSidePanel, watchScrollToTarget, watchScrollToTop } = useSidePanel()
-const { isMobileLayout, checkWidth, watchIsMobileLayout } = useMobileLayout()
+const { watchScrollToTarget, watchScrollToTop } = useSidePanel()
+const { isOverlayLayout, checkWidth } = useMobileLayout()
 
 usePageTool()
 watchScrollToTop(route, checkWidth)
 watchScrollToTarget(route)
-watchIsMobileLayout(isOpen, toggleSidePanel)
 </script>
 
 <template>
-  <ReefSplitView :enabled="!isMobileLayout">
+  <ReefSplitView :overlay="isOverlayLayout">
     <NuxtLayout name="docs">
       <slot />
     </NuxtLayout>
