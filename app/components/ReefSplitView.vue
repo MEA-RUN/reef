@@ -46,7 +46,6 @@ function updateOverlay(open: boolean) {
         v-show="isOpen"
         :default-size="50"
         :min-size="22"
-        collapsible
         class="h-full overflow-hidden"
       >
         <ToolPanel />
