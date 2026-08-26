@@ -19,7 +19,6 @@ body {
 }
 
 .reef-docs-pane {
-  container-type: inline-size;
   height: 100%;
   min-width: 0;
   width: 100%;
@@ -53,11 +52,11 @@ body {
   background: var(--ui-border-accented, var(--ui-primary));
 }
 
-.reef-docs-menu-trigger {
+.reef-docs-pane .reef-docs-menu-trigger {
   display: none;
 }
 
-.reef-docs-navigation-fallback {
+.reef-docs-pane .reef-docs-navigation-fallback {
   display: none;
 }
 
@@ -65,101 +64,101 @@ html.reef-docs-compact > body > #__nuxt header [data-slot="right"] > button:last
   display: none;
 }
 
-@container (max-width: 1023px) {
-  .reef-docs-pane main > div {
-    padding-inline: 1rem;
-  }
+.reef-docs-pane.reef-docs-compact main > div {
+  padding-inline: 1rem;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] {
-    display: block;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] {
+  display: block;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="left"] {
-    display: none;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="left"] {
+  display: none;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] {
-    width: 100%;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] {
+  width: 100%;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="center"] {
-    order: 2;
-    width: 100%;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="center"] {
+  order: 2;
+  width: 100%;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] {
-    order: 1;
-    width: 100%;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] {
+  order: 1;
+  width: 100%;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] > nav {
-    display: block;
-    margin-inline: -1rem;
-    max-height: calc(100vh - var(--ui-header-height));
-    overflow-y: auto;
-    padding-inline: 1rem;
-    position: sticky;
-    top: var(--ui-header-height);
-    z-index: 10;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] > nav {
+  display: block;
+  margin-inline: -1rem;
+  max-height: calc(100vh - var(--ui-header-height));
+  overflow-y: auto;
+  padding-inline: 1rem;
+  position: sticky;
+  top: var(--ui-header-height);
+  z-index: 10;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] > nav > [data-slot="container"] {
-    background: color-mix(in srgb, var(--ui-bg) 75%, transparent);
-    border-bottom: 1px dashed var(--ui-border);
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    padding-block: 1rem 0.625rem;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] > nav > [data-slot="container"] {
+  background: color-mix(in srgb, var(--ui-bg) 75%, transparent);
+  border-bottom: 1px dashed var(--ui-border);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  padding-block: 1rem 0.625rem;
+}
 
-  .reef-docs-menu-trigger {
-    align-self: center;
-    display: inline-flex;
-    grid-column: 1;
-    grid-row: 1;
-    justify-self: start;
-  }
+.reef-docs-pane.reef-docs-compact .reef-docs-menu-trigger {
+  align-self: center;
+  color: var(--ui-text-highlighted);
+  display: inline-flex;
+  font-weight: 500;
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
 
-  .reef-docs-navigation-fallback:not(:empty) {
-    align-items: center;
-    background: color-mix(in srgb, var(--ui-bg) 75%, transparent);
-    border-bottom: 1px dashed var(--ui-border);
-    display: flex;
-    padding: 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
+.reef-docs-pane.reef-docs-compact .reef-docs-navigation-fallback:not(:empty) {
+  align-items: center;
+  background: color-mix(in srgb, var(--ui-bg) 75%, transparent);
+  border-bottom: 1px dashed var(--ui-border);
+  display: flex;
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] {
-    align-self: center;
-    display: flex;
-    grid-column: 2;
-    grid-row: 1;
-    justify-self: end;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] {
+  align-self: center;
+  display: flex;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] [data-slot="trailingIcon"] {
-    display: block;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] [data-slot="trailingIcon"] {
+  display: block;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"][data-state="open"] [data-slot="trailingIcon"] {
-    transform: rotate(180deg);
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"][data-state="open"] [data-slot="trailingIcon"] {
+  transform: rotate(180deg);
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] p[data-slot="trigger"],
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] p[data-slot="trigger"] + [data-slot="content"],
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] [data-slot="bottom"] {
-    display: none;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] p[data-slot="trigger"],
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] p[data-slot="trigger"] + [data-slot="content"],
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] [data-slot="bottom"] {
+  display: none;
+}
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] + [data-slot="content"]:not([hidden]) {
-    display: block;
-    grid-column: 1 / -1;
-  }
+.reef-docs-pane.reef-docs-compact main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] + [data-slot="content"]:not([hidden]) {
+  display: block;
+  grid-column: 1 / -1;
 }

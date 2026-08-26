@@ -35,7 +35,9 @@ watchIsOpen()
 const isHandleEnabled = computed(() => isOpen.value && !isFullscreen.value)
 
 function updateCompactClass(width: number) {
-  document.documentElement.classList.toggle('reef-docs-compact', width > 0 && width < 1024)
+  const compact = width > 0 && width < 1024
+  document.documentElement.classList.toggle('reef-docs-compact', compact)
+  docsPane.value?.classList.toggle('reef-docs-compact', compact)
 }
 
 onMounted(() => {
@@ -50,8 +52,10 @@ onMounted(() => {
   stopWatchingPane = watch(docsPane, (pane) => {
     docsPaneObserver?.disconnect()
 
-    if (pane)
+    if (pane) {
       docsPaneObserver.observe(pane)
+      updateCompactClass(pane.getBoundingClientRect().width)
+    }
   }, { immediate: true })
 })
 
