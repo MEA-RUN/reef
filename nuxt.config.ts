@@ -14,6 +14,10 @@ export default defineNuxtConfig({
     'docus'
   ],
 
+  css: [
+    '~/assets/css/reef.css',
+  ],
+
   // devtools: {
   //   enabled: true,
 

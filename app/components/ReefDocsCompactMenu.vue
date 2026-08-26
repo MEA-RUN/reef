@@ -1,0 +1,145 @@
+<script setup lang="ts">
+import type { ContentNavigationItem } from '@nuxt/content'
+
+const TOC_TARGET = '.reef-docs-pane main [data-slot="right"] > nav > [data-slot="container"]'
+
+const navigation = inject<Ref<ContentNavigationItem[] | null | undefined>>('navigation', ref([]))
+const fallback = useTemplateRef<HTMLElement>('fallback')
+const target = shallowRef<HTMLElement>()
+const open = ref(false)
+const route = useRoute()
+const nuxtApp = useNuxtApp()
+
+let paneObserver: MutationObserver | undefined
+let targetFrame = 0
+
+function isLive(element?: HTMLElement | null) {
+  return !!element?.isConnected
+}
+
+function isDisplayed(element: HTMLElement) {
+  let node: HTMLElement | null = element
+
+  while (node && node !== document.body) {
+    if (getComputedStyle(node).display === 'none')
+      return false
+
+    node = node.parentElement
+  }
+
+  return true
+}
+
+function resolveTarget() {
+  const toc = document.querySelector<HTMLElement>(TOC_TARGET)
+
+  if (isLive(toc) && isDisplayed(toc))
+    return toc
+
+  return fallback.value ?? undefined
+}
+
+function updateTarget() {
+  const next = resolveTarget()
+
+  if (target.value !== next)
+    target.value = next
+}
+
+function scheduleTargetUpdate() {
+  cancelAnimationFrame(targetFrame)
+  targetFrame = requestAnimationFrame(updateTarget)
+}
+
+function observePane() {
+  paneObserver?.disconnect()
+
+  const pane = fallback.value?.closest('.reef-docs-pane')
+  if (!pane)
+    return
+
+  paneObserver = new MutationObserver(scheduleTargetUpdate)
+  paneObserver.observe(pane, { childList: true, subtree: true })
+}
+
+onMounted(() => {
+  target.value = fallback.value ?? undefined
+  nextTick(() => {
+    updateTarget()
+    observePane()
+  })
+})
+
+const unregisterPageHook = nuxtApp.hooks.hook('page:loading:end', () => {
+  nextTick(() => {
+    updateTarget()
+    observePane()
+  })
+})
+
+watch(() => route.fullPath, () => {
+  open.value = false
+  target.value = fallback.value ?? undefined
+  nextTick(updateTarget)
+})
+
+onBeforeUnmount(() => {
+  unregisterPageHook()
+  paneObserver?.disconnect()
+  cancelAnimationFrame(targetFrame)
+})
+</script>
+
+<template>
+  <div
+    ref="fallback"
+    class="reef-docs-navigation-fallback"
+  />
+
+  <Teleport
+    v-if="target"
+    :to="target"
+  >
+    <UDrawer
+      v-model:open="open"
+      direction="left"
+      title="Navigation"
+      description="Navigation entre les pages de la documentation"
+      :handle="false"
+      inset
+      :ui="{
+        content: 'w-full max-w-[min(24rem,calc(100vw-2rem))]',
+      }"
+    >
+      <UButton
+        label="Menu"
+        icon="i-lucide-menu"
+        color="neutral"
+        variant="link"
+        size="sm"
+        class="reef-docs-menu-trigger -mt-1.5"
+        aria-label="Ouvrir le menu de navigation"
+      />
+
+      <template #body>
+        <UButton
+          icon="i-lucide-x"
+          color="neutral"
+          variant="ghost"
+          class="absolute end-4 top-4"
+          aria-label="Fermer le menu de navigation"
+          @click="open = false"
+        />
+
+        <UContentNavigation
+          :navigation="navigation || []"
+          :collapsible="false"
+          :ui="{
+            link: 'min-w-0 items-start',
+            linkTitle: 'min-w-0 flex-1 text-left whitespace-normal break-normal overflow-visible leading-snug',
+          }"
+        />
+      </template>
+    </UDrawer>
+  </Teleport>
+</template>

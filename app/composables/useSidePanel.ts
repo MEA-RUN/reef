@@ -83,13 +83,50 @@ export const useSidePanel = () => {
         return false;
     }
 
+    const getScrollContainer = () => {
+        if (typeof document === 'undefined') {
+            return null
+        }
+
+        return document.querySelector<HTMLElement>('.reef-scroll-container, .scroll-container')
+    }
+
+    const scrollToHash = (hash: string, attempts = 10) => {
+        if (!hash || typeof document === 'undefined') {
+            return
+        }
+
+        const id = decodeURIComponent(hash.replace(/^#/, ''))
+        const target = document.getElementById(id)
+        const scrollContainer = getScrollContainer()
+
+        if (!target || !scrollContainer) {
+            if (attempts > 0) {
+                requestAnimationFrame(() => scrollToHash(hash, attempts - 1))
+            }
+            return
+        }
+
+        const pane = scrollContainer.closest('.reef-docs-pane')
+        const stickyBar = pane?.classList.contains('reef-docs-compact')
+            ? scrollContainer.querySelector<HTMLElement>('[data-slot="right"] > nav, .reef-docs-navigation-fallback:not(:empty)')
+            : null
+        const offset = (stickyBar?.getBoundingClientRect().height ?? 0) + 16
+        const top = scrollContainer.scrollTop
+            + target.getBoundingClientRect().top
+            - scrollContainer.getBoundingClientRect().top
+            - offset
+
+        scrollContainer.scrollTo({
+            top: Math.max(0, top),
+            behavior: 'smooth',
+        })
+    }
+
     const watchScrollToTop = (route: any, checkWidth: any) => {
         watch(() => route.path, async () => {
             if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-                const scrollContainer = document.querySelector('.scroll-container');
-                if (scrollContainer) {
-                    scrollContainer.scrollTo({ top: 0  });
-                }
+                getScrollContainer()?.scrollTo({ top: 0 })
                 setTimeout(checkWidth, 100);
             }
         }, { immediate: true });
@@ -97,17 +134,8 @@ export const useSidePanel = () => {
 
     const watchScrollToTarget = (route: any) => {
         watch(() => route.hash, (newHash) => {
-            if (newHash && typeof window !== 'undefined' && typeof document !== 'undefined') {
-                const target = document.getElementById(newHash.slice(1));
-                const scrollContainer = document.querySelector('.scroll-container');
-                if (target && scrollContainer) {
-                    setTimeout(() => {
-                        scrollContainer.scrollTo({
-                        top: target.offsetTop - 80,
-                        behavior: 'smooth'
-                        });
-                    }, 100);
-                }
+            if (newHash) {
+                scrollToHash(newHash)
             }
         }, { immediate: true });
     }

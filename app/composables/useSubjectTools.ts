@@ -18,6 +18,9 @@ export interface SubjectManifest {
   title: string
   description?: string
   tools: Tool[]
+  splitView?: {
+    toolMinSizePercent?: number
+  }
   assets?: {
     logo?: string
     images?: string[]

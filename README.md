@@ -60,6 +60,20 @@ subject repository. See the
 [`subject-template` documentation](https://github.com/MEA-RUN/subject-template)
 for the manifest format.
 
+The tool panel has no minimum width by default. A manifest can preserve a
+minimum percentage of the split view when a tool requires it:
+
+```json
+{
+  "splitView": {
+    "toolMinSizePercent": 20
+  }
+}
+```
+
+The value is constrained between `0` and `67` so the documentation keeps at
+least one third of the available width.
+
 ## Using Reef as a Nuxt layer
 
 The publishing workflow uses the dedicated site base, but Reef can also be

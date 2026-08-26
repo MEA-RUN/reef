@@ -1,7 +1,10 @@
 <template>
   <div class="tool-selector h-full flex flex-col bg-background">
     <!-- Header -->
-    <div class="p-6 border-b border-default">
+    <div
+      v-if="showHeader"
+      class="p-6 border-b border-default"
+    >
       <h2 class="text-2xl font-bold mb-2">Available Tools</h2>
       <p v-if="manifest?.title" class="text-sm font-medium text-primary mb-1">{{ manifest.title }}</p>
       <p class="text-sm text-muted">Click a tool to open it in the viewer</p>
@@ -85,6 +88,12 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useSubjectTools } from "~/composables/useSubjectTools"
+
+withDefaults(defineProps<{
+  showHeader?: boolean
+}>(), {
+  showHeader: true,
+})
 
 const {
   manifest,
