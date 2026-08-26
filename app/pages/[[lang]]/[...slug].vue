@@ -61,12 +61,12 @@ const title = page.value.seo?.title || page.value.title;
 const description = page.value.seo?.description || page.value.description;
 const breadcrumbs = computed(() => findPageBreadcrumbs(navigation?.value, page.value?.path || ""));
 
-useSeoMeta({
+// from docus
+useSeo({
   title,
-  ogTitle: title,
   description,
-  ogType: "article",
-  articleModifiedTime: (page.value as unknown as Record<string, unknown>).modifiedAt as string | undefined,
+  type: "article",
+  modifiedAt: (page.value as unknown as Record<string, unknown>).modifiedAt as string | undefined,
   breadcrumbs,
 });
 
@@ -114,15 +114,17 @@ watch(pageTool, async (newTool) => {
   if (newTool) await openToolFromFrontmatter(newTool);
 }, { immediate: true });
 
-defineOgImage("Docs", {
+defineOgImage('Docs', {
   headline: headline.value,
-});
+  title: title?.slice(0, 60),
+  description: formatOgDescription(title, description),
+})
 
-const github = computed(() => appConfig.github ? appConfig.github : null);
+const github = computed(() => appConfig.github ? appConfig.github : null)
 
 const editLink = computed(() => {
   if (!github.value) return;
-  const contentDir = (github.value as typeof github.value & { contentDir?: string }).contentDir || "content";
+  const contentDir = (github.value as typeof github.value & { contentDir?: string }).contentDir || "content"; // for edit this page
   return [
     github.value.url,
     "edit",
@@ -132,6 +134,7 @@ const editLink = computed(() => {
     `${page.value?.stem}.${page.value?.extension}`,
   ].filter(Boolean).join("/");
 });
+
 const pageUi = computed(() => ({
   center: isMobileLayout.value ? "lg:col-span-8" : "lg:col-span-6",
 }));
