@@ -29,7 +29,8 @@ function updateOverlay(open: boolean) {
     >
       <SplitterPanel
         v-show="!isFullscreen"
-        :min-size="64"
+        :default-size="50"
+        :min-size="33"
       >
         <div class="reef-scroll-container">
           <slot />
@@ -43,6 +44,7 @@ function updateOverlay(open: boolean) {
 
       <SplitterPanel
         v-show="isOpen"
+        :default-size="50"
         :min-size="22"
         collapsible
         class="h-full overflow-hidden"
