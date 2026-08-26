@@ -7,6 +7,9 @@ const props = withDefaults(defineProps<{
   overlay: true,
 })
 
+const docsPane = useTemplateRef<HTMLElement>('docsPane')
+let docsPaneObserver: ResizeObserver | undefined
+
 const {
   isOpen,
   isFullscreen,
@@ -27,6 +30,25 @@ const toolMinSize = computed(() => {
 
 watchIsOpen()
 
+onMounted(() => {
+  docsPaneObserver = new ResizeObserver(([entry]) => {
+    document.documentElement.classList.toggle('reef-docs-compact', (entry?.contentRect.width ?? 0) < 1024)
+  })
+
+  watch(docsPane, (pane) => {
+    docsPaneObserver?.disconnect()
+
+    if (pane) {
+      docsPaneObserver?.observe(pane)
+    }
+  }, { immediate: true })
+})
+
+onBeforeUnmount(() => {
+  docsPaneObserver?.disconnect()
+  document.documentElement.classList.remove('reef-docs-compact')
+})
+
 function updateOverlay(open: boolean) {
   toggleSidePanel(open)
 }
@@ -44,7 +66,10 @@ function updateOverlay(open: boolean) {
         :default-size="50"
         :min-size="33"
       >
-        <div class="reef-scroll-container">
+        <div
+          ref="docsPane"
+          class="reef-scroll-container reef-docs-pane"
+        >
           <slot />
         </div>
       </SplitterPanel>
@@ -66,7 +91,8 @@ function updateOverlay(open: boolean) {
 
     <div
       v-else
-      class="reef-scroll-container"
+      ref="docsPane"
+      class="reef-scroll-container reef-docs-pane"
     >
       <slot />
     </div>

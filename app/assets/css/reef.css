@@ -17,3 +17,80 @@ body {
   height: 100%;
   overflow: auto;
 }
+
+.reef-docs-pane {
+  container-type: inline-size;
+}
+
+html.reef-docs-compact > body > #__nuxt header [data-slot="right"] > button:last-child {
+  display: inline-flex;
+}
+
+html.reef-docs-compact [role="dialog"][class~="lg:hidden"] {
+  display: flex;
+}
+
+@container (max-width: 1023px) {
+  .reef-docs-pane main > div {
+    padding-inline: 1rem;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] {
+    display: block;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="left"] {
+    display: none;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] {
+    width: 100%;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="center"] {
+    order: 2;
+    width: 100%;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] {
+    order: 1;
+    width: 100%;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] > nav {
+    display: block;
+    margin-inline: -1rem;
+    max-height: calc(100vh - var(--ui-header-height));
+    overflow-y: auto;
+    padding-inline: 1rem;
+    position: sticky;
+    top: var(--ui-header-height);
+    z-index: 10;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] > nav > [data-slot="container"] {
+    background: color-mix(in srgb, var(--ui-bg) 75%, transparent);
+    border-bottom: 1px dashed var(--ui-border);
+    padding-block: 1rem 0.625rem;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] {
+    display: flex;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] p[data-slot="trigger"],
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] p[data-slot="trigger"] + [data-slot="content"],
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] [data-slot="bottom"] {
+    display: none;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] + [data-slot="content"]:not([hidden]) {
+    display: block;
+  }
+}
