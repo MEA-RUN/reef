@@ -22,12 +22,48 @@ body {
   container-type: inline-size;
 }
 
-html.reef-docs-compact > body > #__nuxt header [data-slot="right"] > button:last-child {
-  display: inline-flex;
-}
+@media (min-width: 1024px) {
+  html.reef-docs-compact > body > #__nuxt header > [data-slot="container"] {
+    position: relative;
+  }
 
-html.reef-docs-compact [role="dialog"][class~="lg:hidden"] {
-  display: flex;
+  html.reef-docs-compact > body > #__nuxt header [data-slot="right"] > button:last-child {
+    display: inline-flex;
+    inset-block-start: 50%;
+    inset-inline-start: 4rem;
+    margin: 0;
+    position: absolute;
+    transform: translateY(-50%);
+  }
+
+  html.reef-docs-compact > body > [data-slot="overlay"][class~="lg:hidden"] {
+    display: block;
+  }
+
+  html.reef-docs-compact > body > [role="dialog"][data-slot="content"][class~="lg:hidden"] {
+    border-right: 1px solid var(--ui-border);
+    box-shadow: 12px 0 32px rgb(0 0 0 / 18%);
+    display: flex;
+    inset: 0 auto 0 0;
+    max-width: min(24rem, calc(100vw - 2rem));
+    width: 100%;
+  }
+
+  html.reef-docs-compact > body > [role="dialog"] [data-slot="header"] [data-slot="left"] {
+    flex: 1;
+  }
+
+  html.reef-docs-compact > body > [role="dialog"] [data-slot="header"] [data-slot="right"] {
+    flex: none;
+  }
+
+  html.reef-docs-compact > body > [role="dialog"] [data-slot="header"] [data-slot="right"] > button[class~="lg:inline-flex"] {
+    display: none;
+  }
+
+  html.reef-docs-compact > body > [role="dialog"] [data-slot="header"] [data-slot="right"] > button:last-child {
+    display: inline-flex;
+  }
 }
 
 @container (max-width: 1023px) {
@@ -82,6 +118,14 @@ html.reef-docs-compact [role="dialog"][class~="lg:hidden"] {
 
   .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] {
     display: flex;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] [data-slot="trailingIcon"] {
+    display: block;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"][data-state="open"] [data-slot="trailingIcon"] {
+    transform: rotate(180deg);
   }
 
   .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] p[data-slot="trigger"],
