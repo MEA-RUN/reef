@@ -13,6 +13,18 @@ const {
   toggleSidePanel,
   watchIsOpen,
 } = useSidePanel()
+const { manifest } = useSubjectTools()
+
+const toolMinSize = computed(() => {
+  const configuredSize = manifest.value?.splitView?.toolMinSizePercent
+
+  if (typeof configuredSize !== 'number' || !Number.isFinite(configuredSize)) {
+    return 0
+  }
+
+  return Math.min(Math.max(configuredSize, 0), 67)
+})
+
 watchIsOpen()
 
 function updateOverlay(open: boolean) {
@@ -45,7 +57,7 @@ function updateOverlay(open: boolean) {
       <SplitterPanel
         v-show="isOpen"
         :default-size="50"
-        :min-size="22"
+        :min-size="toolMinSize"
         class="h-full overflow-hidden"
       >
         <ToolPanel />
