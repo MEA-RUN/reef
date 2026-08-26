@@ -9,6 +9,8 @@ const props = withDefaults(defineProps<{
 
 const docsPane = useTemplateRef<HTMLElement>('docsPane')
 let docsPaneObserver: ResizeObserver | undefined
+let compactFrame = 0
+let stopWatchingPane: (() => void) | undefined
 
 const {
   isOpen,
@@ -30,21 +32,32 @@ const toolMinSize = computed(() => {
 
 watchIsOpen()
 
+const isHandleEnabled = computed(() => isOpen.value && !isFullscreen.value)
+
+function updateCompactClass(width: number) {
+  document.documentElement.classList.toggle('reef-docs-compact', width > 0 && width < 1024)
+}
+
 onMounted(() => {
   docsPaneObserver = new ResizeObserver(([entry]) => {
-    document.documentElement.classList.toggle('reef-docs-compact', (entry?.contentRect.width ?? 0) < 1024)
+    const width = entry?.contentRect.width ?? 0
+    cancelAnimationFrame(compactFrame)
+    compactFrame = requestAnimationFrame(() => {
+      updateCompactClass(width)
+    })
   })
 
-  watch(docsPane, (pane) => {
+  stopWatchingPane = watch(docsPane, (pane) => {
     docsPaneObserver?.disconnect()
 
-    if (pane) {
-      docsPaneObserver?.observe(pane)
-    }
+    if (pane)
+      docsPaneObserver.observe(pane)
   }, { immediate: true })
 })
 
 onBeforeUnmount(() => {
+  stopWatchingPane?.()
+  cancelAnimationFrame(compactFrame)
   docsPaneObserver?.disconnect()
   document.documentElement.classList.remove('reef-docs-compact')
 })
@@ -62,28 +75,38 @@ function updateOverlay(open: boolean) {
       class="h-full"
     >
       <SplitterPanel
+        id="reef-docs"
         v-show="!isFullscreen"
+        :order="1"
         :default-size="50"
         :min-size="33"
+        class="min-h-0 min-w-0"
       >
         <div
           ref="docsPane"
-          class="reef-scroll-container reef-docs-pane"
+          class="reef-docs-pane"
         >
-          <slot />
+          <div class="reef-scroll-container">
+            <ReefDocsCompactMenu />
+            <slot />
+          </div>
         </div>
       </SplitterPanel>
 
       <SplitterResizeHandle
-        v-show="isOpen && !isFullscreen"
-        class="border border-default"
+        id="reef-docs-tools"
+        v-show="isHandleEnabled"
+        :disabled="!isHandleEnabled"
+        class="reef-split-handle"
       />
 
       <SplitterPanel
+        id="reef-tools"
         v-show="isOpen"
+        :order="2"
         :default-size="50"
         :min-size="toolMinSize"
-        class="h-full overflow-hidden"
+        class="h-full min-h-0 min-w-0 overflow-hidden"
       >
         <ToolPanel />
       </SplitterPanel>
@@ -92,9 +115,12 @@ function updateOverlay(open: boolean) {
     <div
       v-else
       ref="docsPane"
-      class="reef-scroll-container reef-docs-pane"
+      class="reef-docs-pane"
     >
-      <slot />
+      <div class="reef-scroll-container">
+        <ReefDocsCompactMenu />
+        <slot />
+      </div>
     </div>
 
     <USlideover

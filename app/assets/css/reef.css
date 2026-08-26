@@ -20,50 +20,49 @@ body {
 
 .reef-docs-pane {
   container-type: inline-size;
+  height: 100%;
+  min-width: 0;
+  width: 100%;
 }
 
-@media (min-width: 1024px) {
-  html.reef-docs-compact > body > #__nuxt header > [data-slot="container"] {
-    position: relative;
-  }
+.reef-split-handle {
+  position: relative;
+  z-index: 20;
+  width: 8px;
+  margin-inline: -3px;
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  cursor: col-resize;
+}
 
-  html.reef-docs-compact > body > #__nuxt header [data-slot="right"] > button:last-child {
-    display: inline-flex;
-    inset-block-start: 50%;
-    inset-inline-start: 4rem;
-    margin: 0;
-    position: absolute;
-    transform: translateY(-50%);
-  }
+.reef-split-handle::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+  background: var(--ui-border);
+}
 
-  html.reef-docs-compact > body > [data-slot="overlay"][class~="lg:hidden"] {
-    display: block;
-  }
+.reef-split-handle:hover::after,
+.reef-split-handle[data-state="drag"]::after,
+.reef-split-handle[data-resize-handle-active]::after {
+  width: 2px;
+  background: var(--ui-border-accented, var(--ui-primary));
+}
 
-  html.reef-docs-compact > body > [role="dialog"][data-slot="content"][class~="lg:hidden"] {
-    border-right: 1px solid var(--ui-border);
-    box-shadow: 12px 0 32px rgb(0 0 0 / 18%);
-    display: flex;
-    inset: 0 auto 0 0;
-    max-width: min(24rem, calc(100vw - 2rem));
-    width: 100%;
-  }
+.reef-docs-menu-trigger {
+  display: none;
+}
 
-  html.reef-docs-compact > body > [role="dialog"] [data-slot="header"] [data-slot="left"] {
-    flex: 1;
-  }
+.reef-docs-navigation-fallback {
+  display: none;
+}
 
-  html.reef-docs-compact > body > [role="dialog"] [data-slot="header"] [data-slot="right"] {
-    flex: none;
-  }
-
-  html.reef-docs-compact > body > [role="dialog"] [data-slot="header"] [data-slot="right"] > button[class~="lg:inline-flex"] {
-    display: none;
-  }
-
-  html.reef-docs-compact > body > [role="dialog"] [data-slot="header"] [data-slot="right"] > button:last-child {
-    display: inline-flex;
-  }
+html.reef-docs-compact > body > #__nuxt header [data-slot="right"] > button:last-child {
+  display: none;
 }
 
 @container (max-width: 1023px) {
@@ -113,11 +112,36 @@ body {
   .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] > nav > [data-slot="container"] {
     background: color-mix(in srgb, var(--ui-bg) 75%, transparent);
     border-bottom: 1px dashed var(--ui-border);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     padding-block: 1rem 0.625rem;
   }
 
-  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] {
+  .reef-docs-menu-trigger {
+    align-self: center;
+    display: inline-flex;
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+
+  .reef-docs-navigation-fallback:not(:empty) {
+    align-items: center;
+    background: color-mix(in srgb, var(--ui-bg) 75%, transparent);
+    border-bottom: 1px dashed var(--ui-border);
     display: flex;
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] {
+    align-self: center;
+    display: flex;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
   }
 
   .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] [data-slot="trailingIcon"] {
@@ -136,5 +160,6 @@ body {
 
   .reef-docs-pane main > div > [data-slot="root"] > [data-slot="center"] > [data-slot="root"] > [data-slot="right"] button[data-slot="trigger"] + [data-slot="content"]:not([hidden]) {
     display: block;
+    grid-column: 1 / -1;
   }
 }
