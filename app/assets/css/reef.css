@@ -18,6 +18,10 @@ body {
   overflow: auto;
 }
 
+.reef-scroll-container :is(h1, h2, h3, h4, h5, h6)[id] {
+  scroll-margin-top: 1.25rem;
+}
+
 .reef-docs-pane {
   height: 100%;
   min-width: 0;
@@ -103,7 +107,7 @@ html.reef-docs-compact > body > #__nuxt header [data-slot="right"] > button:last
   overflow-y: auto;
   padding-inline: 1rem;
   position: sticky;
-  top: var(--ui-header-height);
+  top: 0;
   z-index: 10;
 }
 
