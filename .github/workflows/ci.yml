@@ -33,3 +33,33 @@ jobs:
 
       - name: Build
         run: bun run build
+
+  template-build:
+    name: Build site template
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout site template
+        uses: actions/checkout@v7.0.1
+        with:
+          repository: MEA-RUN/reef-site-template
+          path: site
+
+      - name: Checkout Reef as local dependency
+        uses: actions/checkout@v7.0.1
+        with:
+          path: site/reef
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2.2.0
+        with:
+          bun-version: 1.4.0
+
+      - name: Install dependencies
+        working-directory: site
+        run: bun ci
+
+      - name: Build site template
+        working-directory: site
+        run: bun run build

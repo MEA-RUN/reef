@@ -1,5 +1,8 @@
 import { defineNuxtConfig } from "nuxt/config";
+import { fileURLToPath } from 'node:url'
 import { configureI18n } from './config/i18n'
+
+const reefCss = fileURLToPath(new URL('./app/assets/css/reef.css', import.meta.url))
 
 const modules = [
   "@nuxt/icon",
@@ -15,7 +18,7 @@ export default defineNuxtConfig({
   ],
 
   css: [
-    '~/assets/css/reef.css',
+    reefCss,
   ],
 
   // devtools: {
